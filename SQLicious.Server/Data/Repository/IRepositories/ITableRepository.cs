@@ -7,6 +7,7 @@ namespace SQLicious.Server.Data.Repository.IRepositories
         Task<IEnumerable<Table>> GetAllTablesAsync();
         Task<Table> GetTableByIdAsync(int tableId);
         Task CreateTableAsync(Table table);
+        Task<IEnumerable<Table>> GetListAllFreeTablesDateTime(DateTime dateTime);
         Task UpdateTableAsync(Table table);
         Task DeleteTableAsync(int tableId);
     }

@@ -1,4 +1,5 @@
-﻿using SQLicious.Server.Data.Repository.IRepositories;
+﻿using Microsoft.EntityFrameworkCore;
+using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Model;
 
 namespace SQLicious.Server.Data.Repository
@@ -19,12 +20,28 @@ namespace SQLicious.Server.Data.Repository
 
         public async Task DeleteTableAsync(int tableId)
         {
-            throw new NotImplementedException();
+            var table = await _context.Tables.FindAsync(tableId);
+
+            if (table != null)
+            {
+                _context.Tables.Remove(table);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Table>> GetListAllFreeTablesDateTime(DateTime dateTime)
+        {
+            var tables = await _context.Bookings
+                .Where(d => d.BookedDateTime != dateTime)
+                .Select(t => t.Table)
+                .ToListAsync();
+            return tables;
         }
 
         public async Task<IEnumerable<Table>> GetAllTablesAsync()
         {
-            throw new NotImplementedException();
+            var listTables = await _context.Tables.ToListAsync();
+            return listTables;
         }
 
         public async Task<Table> GetTableByIdAsync(int tableId)
@@ -34,7 +51,8 @@ namespace SQLicious.Server.Data.Repository
 
         public async Task UpdateTableAsync(Table table)
         {
-            throw new NotImplementedException();
+            _context.Tables.Update(table);
+            await _context.SaveChangesAsync();
         }
     }
 }
