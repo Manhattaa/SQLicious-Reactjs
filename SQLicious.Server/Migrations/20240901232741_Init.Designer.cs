@@ -12,7 +12,7 @@ using SQLicious.Server.Data;
 namespace SQLicious.Server.Migrations
 {
     [DbContext(typeof(RestaurantContext))]
-    [Migration("20240901214709_Init")]
+    [Migration("20240901232741_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -122,7 +122,7 @@ namespace SQLicious.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
 
-                    b.Property<string>("EmailAddress")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
