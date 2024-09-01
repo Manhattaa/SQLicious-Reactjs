@@ -1,6 +1,9 @@
-﻿namespace SQLicious.Server.Model
+﻿using Microsoft.AspNetCore.Identity;
+namespace SQLicious.Server.Model
 {
-    public class Admin
+    public class Admin : IdentityUser
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }
