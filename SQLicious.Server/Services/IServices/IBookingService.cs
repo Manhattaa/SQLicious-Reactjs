@@ -7,6 +7,7 @@ namespace SQLicious.Server.Services.IServices
         Task<IEnumerable<Booking>> GetAllBookingsAsync();
         Task ReserveATableAsync(Booking booking);
         Task<Booking> GetBookingByIdAsync(int bookingId);
+        Task<Booking> UserTableExistsAsync(int tableId, int customerId);
         Task UpdateBookingAsync(Booking booking);
         Task DeleteBookingAsync(int bookingId);
     }
