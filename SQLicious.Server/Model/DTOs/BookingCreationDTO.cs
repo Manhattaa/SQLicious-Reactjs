@@ -6,7 +6,7 @@ namespace SQLicious.Server.Model.DTOs
     {
         public int AmountOfCustomers { get; set; }
         public DateTime BookedDateTime { get; set; }
-        public int UserId { get; set; }
+        public int CustomerId { get; set; }
         public int TableId { get; set; }
     }
 }

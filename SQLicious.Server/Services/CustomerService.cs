@@ -1,33 +1,113 @@
-﻿using SQLicious.Server.Model;
+﻿using SQLicious.Server.Data.Repository.IRepositories;
+using SQLicious.Server.Model;
+using SQLicious.Server.Model.DTOs;
 using SQLicious.Server.Services.IServices;
 
 namespace SQLicious.Server.Services
 {
     public class CustomerService : ICustomerService
     {
-        public Task CreateCustomerAsync(Customer customer)
+        private readonly ICustomerRepository _customerRepository;
+
+        public CustomerService(ICustomerRepository customerRepository)
         {
-            throw new NotImplementedException();
+            _customerRepository = customerRepository;
+        }
+        public async Task CreateCustomerAsync(Customer customer)
+        {
+            try
+            {
+                var newCustomer = new Customer
+                {
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    Email = customer.Email
+                };
+
+                await _customerRepository.CreateCustomerAsync(newCustomer);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to create Customer: {ex.Message}");
+            }
         }
 
-        public Task DeleteCustomerAsync(int customerId)
+        public async Task DeleteCustomerAsync(int customerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _customerRepository.DeleteCustomerAsync(customerId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to delete Customer: {ex.Message}");
+            }
         }
 
-        public Task<IEnumerable<Customer>> GetAllCustomersAsync()
+        public async Task<IEnumerable<CustomerDTO>> GetAllCustomersAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var listOfCustomers = await _customerRepository.GetAllCustomersAsync();
+
+                return listOfCustomers.Select(c => new CustomerDTO
+                {
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    Email = c.Email
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
         }
 
-        public Task<Customer> GetCustomerByIdAsync(int customerId)
+        public async Task<CustomerDTO> GetCustomerByIdAsync(int customerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var customer = await _customerRepository.GetCustomerByIdAsync(customerId);
+
+                if (customer == null) { return null; }
+
+                return new CustomerDTO
+                {
+                    CustomerId = customer.CustomerId,
+                    FirstName = customer.FirstName,
+                    LastName = customer.FirstName,
+                    Email = customer.Email,
+                    PhoneNumber = customer.PhoneNumber
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
         }
 
-        public Task UpdateCustomerAsync(Customer customer)
+        public async Task UpdateCustomerAsync(CustomerDTO customer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (customer != null)
+                {
+                    var updatedCustomer = new Customer
+                    {
+                        CustomerId = customer.CustomerId,
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
+                        Email = customer.Email,
+                        PhoneNumber = customer.PhoneNumber
+                    };
+
+                    await _customerRepository.UpdateCustomerAsync(updatedCustomer);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to update Customer: {ex.Message}");
+            }
         }
     }
 }
