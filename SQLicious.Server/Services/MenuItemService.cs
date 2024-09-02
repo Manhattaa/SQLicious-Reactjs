@@ -1,38 +1,110 @@
-﻿using SQLicious.Server.Model;
+﻿using SQLicious.Server.Data.Repository.IRepositories;
+using SQLicious.Server.Model;
+using SQLicious.Server.Model.DTOs;
 using SQLicious.Server.Services.IServices;
 
 namespace SQLicious.Server.Services
 {
     public class MenuItemService : IMenuItemService
     {
-        public Task CreateMenuItemAsync(MenuItems menuItem)
+        private readonly IMenuItemRepository _menuItemRepository;
+
+        public MenuItemService(IMenuItemRepository menuItemRepository)
+        {
+            _menuItemRepository = menuItemRepository;
+        }
+        public async Task CreateMenuItemAsync(MenuItemDTO menuItem)
+        {
+            try
+            {
+                var newMenuItem = new MenuItems
+                {
+                    Name = menuItem.Name,
+                    Price = menuItem.Price,
+                    IsAvailable = menuItem.IsAvailable
+                };
+
+                await _menuItemRepository.CreateMenuItemAsync(newMenuItem);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to create the Menu Item: {ex.Message}");
+            }
+        }
+
+        public async Task DeleteMenuItemAsync(int menuItemId)
+        {
+            try
+            {
+                await _menuItemRepository.DeleteMenuItemAsync(menuItemId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to delete the Menu Item: {ex.Message}");
+            }
+        }
+
+        public async Task<IEnumerable<MenuItems>> GetAllMenuItemsAsync()
+        {
+            try
+            {
+                var listOfMenuItems = await _menuItemRepository.GetAllMenuItemsAsync();
+
+                return listOfMenuItems.Select(i => new MenuItems
+                {
+                    MenuItemId = i.MenuItemId,
+                    Name = i.Name,
+                    Price = i.Price,
+                    IsAvailable = i.IsAvailable
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
+        }
+
+        public async Task<MenuItems> GetMenuItemByIdAsync(int menuItemId)
+        {
+            try
+            {
+                var menuItem = await _menuItemRepository.GetMenuItemByIdAsync(menuItemId);
+
+                return menuItem;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
+        }
+        //Future Implementation
+        public async Task<IEnumerable<MenuItems>> GetThisWeeksMenu()
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteMenuItemAsync(int menuItemId)
+        public async Task UpdateMenuItemAsync(MenuItems menuItem)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                if (menuItem != null)
+                {
+                    var updatedMenuItem = new MenuItems
+                    {
+                        MenuItemId = menuItem.MenuItemId,
+                        Name = menuItem.Name,
+                        Price = menuItem.Price,
+                        IsAvailable = menuItem.IsAvailable
+                    };
 
-        public Task<IEnumerable<MenuItems>> GetAllMenuItemsAsync()
-        {
-            throw new NotImplementedException();
-        }
+                    await _menuItemRepository.UpdateMenuItemAsync(updatedMenuItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to update the Menu Item: {ex.Message}");
+            }
 
-        public Task<MenuItems> GetMenuItemByIdAsync(int menuItemId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<MenuItems>> GetThisWeeksMenu()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateMenuItemAsync(MenuItems menuItem)
-        {
-            throw new NotImplementedException();
         }
     }
 }

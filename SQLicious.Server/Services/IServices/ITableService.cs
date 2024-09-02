@@ -1,14 +1,15 @@
 ﻿using SQLicious.Server.Model;
+using SQLicious.Server.Model.DTOs;
 
 namespace SQLicious.Server.Services.IServices
 {
     public interface ITableService
     {
-        Task<IEnumerable<Table>> GetAllTablesAsync();
-        Task<Table> GetTableByIdAsync(int tableId);
-        Task CreateTableAsync(Table table);
-        Task<IEnumerable<Table>> GetListAllFreeTablesDateTime(DateTime dateTime);
-        Task UpdateTableAsync(Table table);
+        Task<IEnumerable<TableDTO>> GetAllTablesAsync();
+        Task<TableDTO> GetTableByIdAsync(int tableId);
+        Task CreateTableAsync(TableCreationDTO table);
+        Task<IEnumerable<TableDTO>> GetListAllFreeTablesDateTime(DateTime dateTime);
+        Task UpdateTableAsync(TableDTO table);
         Task DeleteTableAsync(int tableId);
     }
 }

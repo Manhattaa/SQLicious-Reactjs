@@ -7,7 +7,7 @@ namespace SQLicious.Server.Services.IServices
     {
         Task<IEnumerable<CustomerDTO>> GetAllCustomersAsync();
         Task<CustomerDTO> GetCustomerByIdAsync(int customerId);
-        Task CreateCustomerAsync(Customer customer);
+        Task CreateCustomerAsync(CustomerCreationDTO customer);
         Task UpdateCustomerAsync(CustomerDTO customer);
         Task DeleteCustomerAsync(int customerId);
     }
