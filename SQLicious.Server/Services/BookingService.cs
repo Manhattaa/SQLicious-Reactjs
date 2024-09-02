@@ -53,12 +53,30 @@ namespace SQLicious.Server.Services
             }
         }
 
-        public Task<Booking> GetBookingByIdAsync(int bookingId)
+        public async Task<BookingDTO> GetBookingByIdAsync(int bookingId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var booking = await _bookingRepository.GetBookingByIdAsync(bookingId);
+
+                if (booking == null) { return null; }
+
+                return new BookingDTO
+                {
+                    BookingId = bookingId,
+                    AmountOfCustomers = booking.AmountOfCustomers,
+                    BookedDateTime = booking.BookedDateTime,
+                    CustomerId = booking.CustomerId,
+                    TableId = booking.TableId
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
         }
 
-        public async Task ReserveATableAsync(Booking booking)
+        public async Task ReserveATableAsync(BookingCreationDTO booking)
         {
             await CustomerTableExistsAsync(booking.CustomerId, booking.TableId);
 
@@ -84,7 +102,7 @@ namespace SQLicious.Server.Services
         }
     
 
-        public async Task UpdateBookingAsync(Booking booking)
+        public async Task UpdateBookingAsync(BookingDTO booking)
         {
             await CustomerTableExistsAsync(booking.CustomerId, booking.TableId);
 
@@ -128,7 +146,7 @@ namespace SQLicious.Server.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while trying to find . {ex.Message}");
+                throw new Exception($"An error occurred while trying to update this Booking: {ex.Message}");
             }
         }
 
