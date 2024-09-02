@@ -20,7 +20,7 @@ namespace SQLicious.Server
             // Add services to the container.
             builder.Services.AddDbContext<RestaurantContext>(options =>
             {
-                options.UseSqlServer(Environment.GetEnvironmentVariable("SQLICIOUS_CONNECTION"));
+                options.UseSqlServer(Environment.GetEnvironmentVariable("SQLICIOUS_REACT_CONNECTION"));
             });
 
 
