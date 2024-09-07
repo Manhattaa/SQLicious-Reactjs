@@ -17,7 +17,19 @@ const IndexPage = () => {
     const handleDateClick = (date) => setSelectedDate(date);
     const handleAmountClick = (amount) => setSelectedAmount(amount);
     
-    const handleLoginClick = () => navigate('/booking');
+    const handleLoginClick = () => {
+        if (selectedFood && selectedDate && selectedAmount) {
+            navigate('/booking', {
+                state: {
+                    selectedFood,
+                    selectedDate,
+                    selectedAmount
+                }
+            });
+        } else {
+            alert("Please select all required fields");
+        }
+    };
 
     // Helper function to show names of the day in Swedish
     const getWeekday = (date) => date.toLocaleDateString('sv-SE', { weekday: 'long' });
