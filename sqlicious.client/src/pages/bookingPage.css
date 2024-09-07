@@ -1,0 +1,48 @@
+.booking-page {
+    padding: 20px;
+}
+
+.summary, .available-times {
+    margin-bottom: 20px;
+}
+
+.summary h2, .available-times h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.summary p {
+    font-size: 1.2em;
+    margin: 5px 0;
+}
+
+.time-slot-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.time-slot-button {
+    background-color: #13bd76;
+    border: none;
+    padding: 10px;
+    color: white;
+    font-size: 1.1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.time-slot-button:hover {
+    background-color: #0e9e63;
+}
+
+.time-slot-button:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+}
+
+.loading {
+    font-size: 1.5em;
+    text-align: center;
+}
