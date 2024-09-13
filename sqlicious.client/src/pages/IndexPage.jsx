@@ -22,7 +22,7 @@ const IndexPage = () => {
             navigate('/booking', {
                 state: {
                     selectedFood,
-                    selectedDate,
+                    selectedDate: selectedDate.toISOString(), // Pass the selected date as ISO string
                     selectedAmount
                 }
             });
@@ -49,7 +49,18 @@ const IndexPage = () => {
     // Handle custom date selection
     const handleCustomDateSelect = (date) => {
         setCustomDate(date); // Set the selected custom date
+        setSelectedDate(date); // Also update selected date
         setShowDatePicker(false); // Close the calendar overlay
+    };
+
+    // Compare dates (ignoring time) for highlighting
+    const isSameDate = (date1, date2) => {
+        if (!date1 || !date2) return false; // If either date is null or undefined, return false
+        return (
+            date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate()
+        );
     };
 
     return (
@@ -73,26 +84,26 @@ const IndexPage = () => {
                 <h1 className="header-container">Datum</h1>
                 <div className="date-container">
                     <div
-                        className={`date-box ${selectedDate === 'today' ? 'selected' : ''}`}
-                        onClick={() => handleDateClick('today')}
+                        className={`date-box ${isSameDate(selectedDate, today) ? 'selected' : ''}`}
+                        onClick={() => handleDateClick(today)}
                     >
                         <h2>Idag ({getWeekday(today)})</h2>
                     </div>
                     <div
-                        className={`date-box ${selectedDate === 'tomorrow' ? 'selected' : ''}`}
-                        onClick={() => handleDateClick('tomorrow')}
+                        className={`date-box ${isSameDate(selectedDate, tomorrow) ? 'selected' : ''}`}
+                        onClick={() => handleDateClick(tomorrow)}
                     >
                         <h2>Imorgon ({getWeekday(tomorrow)})</h2>
                     </div>
                     <div
-                        className={`date-box ${selectedDate === 'datePlusTwoDays' ? 'selected' : ''}`}
-                        onClick={() => handleDateClick('datePlusTwoDays')}
+                        className={`date-box ${isSameDate(selectedDate, datePlusTwoDays) ? 'selected' : ''}`}
+                        onClick={() => handleDateClick(datePlusTwoDays)}
                     >
                         <h2>{getWeekday(datePlusTwoDays)}</h2>
                     </div>
                     <div
-                        className={`date-box ${selectedDate === 'datePlusThreeDays' ? 'selected' : ''}`}
-                        onClick={() => handleDateClick('datePlusThreeDays')}
+                        className={`date-box ${isSameDate(selectedDate, datePlusThreeDays) ? 'selected' : ''}`}
+                        onClick={() => handleDateClick(datePlusThreeDays)}
                     >
                         <h2>{getWeekday(datePlusThreeDays)}</h2>
                     </div>
