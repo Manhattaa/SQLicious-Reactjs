@@ -1,4 +1,4 @@
-
+ 
 using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Data.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -23,8 +23,6 @@ namespace SQLicious.Server
                 options.UseSqlServer(Environment.GetEnvironmentVariable("SQLICIOUS_CONNECTION"));
             });
 
-
-            builder.Services.AddControllers();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
