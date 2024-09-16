@@ -98,8 +98,24 @@ namespace SQLicious.Server.Services
             {
                 throw new Exception($"An error occured while trying to create booking. {ex.Message}");
             }
-
         }
+
+        private async Task<int> GetNextCustomerIdAsync()
+        {
+            try
+            {
+                var customers = await _customerRepository.GetAllCustomersAsync();
+                if (customers.Count() == 0) return 1;
+
+                return customers.Max(c => c.CustomerId) + 1;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get the next CustomerId: {ex.Message}");
+            }
+        }
+
+    
     
 
         public async Task UpdateBookingAsync(BookingDTO booking)
