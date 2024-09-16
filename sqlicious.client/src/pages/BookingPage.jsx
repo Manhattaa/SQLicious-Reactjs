@@ -6,21 +6,18 @@ import './bookingPage.css';
 const BookingPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    
-    // Get the selected food, date, and number of people from the IndexPage
+
     const { selectedFood, selectedDate, selectedAmount } = location.state || {};
 
-    // Safely parse the date string into a Date object
     const parseDate = (dateStr) => {
         const parsedDate = new Date(dateStr);
         return isNaN(parsedDate) ? new Date() : parsedDate;
     };
 
     const baseDate = parseDate(selectedDate);
-
     const [bookedTables, setBookedTables] = useState([]);
+    const [selectedTime, setSelectedTime] = useState('');
 
-    // Example function to fetch table availability
     useEffect(() => {
         axios.get('/api/booking')
             .then(response => {
@@ -32,37 +29,59 @@ const BookingPage = () => {
             });
     }, []);
 
-    // Define meal time ranges based on selected food
+    // Define meal start and end times based on selected food
     const getTimeRange = (food) => {
         const currentMonth = baseDate.getMonth(); // 0-indexed, December is 11
         switch (food) {
             case 'Frukost':
-                return '07:00 - 10:00';
+                return ['07:00', '10:00'];
             case 'Brunch':
-                return '10:00 - 13:00';
+                return ['10:00', '13:00'];
             case 'Lunch':
-                return '12:00 - 15:00';
+                return ['12:00', '15:00'];
             case 'Middag':
-                return '17:00 - 23:00';
+                return ['17:00', '23:00'];
             case 'Julbord':
-                if (currentMonth === 11) { // Check if it's December
-                    return '14:00 - 22:00';
+                if (currentMonth === 11) {
+                    return ['14:00', '22:00'];
                 } else {
-                    return 'Unavailable outside December';
+                    return ['Unavailable', 'Unavailable'];
                 }
             default:
-                return 'Invalid meal selection';
+                return ['Invalid', 'Invalid'];
         }
     };
 
-    const timeRange = getTimeRange(selectedFood);
+    // Function to generate time slots every 30 minutes
+    const generateTimeSlots = (start, end) => {
+        const timeSlots = [];
+        const [startHour, startMinute] = start.split(':').map(Number);
+        const [endHour, endMinute] = end.split(':').map(Number);
+        
+        let currentHour = startHour;
+        let currentMinute = startMinute;
 
-    // Format date as "dd/MM"
+        while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
+            const timeSlot = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
+            timeSlots.push(timeSlot);
+
+            // Move 30 minutes forward
+            currentMinute += 30;
+            if (currentMinute === 60) {
+                currentMinute = 0;
+                currentHour += 1;
+            }
+        }
+        return timeSlots;
+    };
+
+    const [startTime, endTime] = getTimeRange(selectedFood);
+    const timeSlots = generateTimeSlots(startTime, endTime);
+
     const formattedDate = baseDate instanceof Date && !isNaN(baseDate)
-        ? `${baseDate.getDate()}/${baseDate.getMonth() + 1}`  // getMonth() is zero-indexed, so we add 1.
+        ? `${baseDate.getDate()}/${baseDate.getMonth() + 1}`
         : 'Invalid Date';
 
-    // Navigate back to IndexPage when "Ändra" is clicked
     const handleEditClick = () => {
         navigate('/', {
             state: { selectedFood, selectedDate, selectedAmount }
@@ -87,17 +106,19 @@ const BookingPage = () => {
         { id: 'table14'}
     ];
 
-    // Handle table booking click
-    const handleBooking = (tableId) => {
-        if (!bookedTables.includes(tableId)) {
-            axios.post('/api/booking', { tableId })
-                .then(() => {
-                    setBookedTables([...bookedTables, tableId]);
-                    alert(`${tableId} booked successfully!`);
-                })
-                .catch(() => {
-                    alert('Failed to book the table. It may already be booked.');
-                });
+    const handleTableClick = (tableId) => {
+        if (!bookedTables.includes(tableId) && selectedTime) {
+            navigate('/contact', {
+                state: {
+                    selectedFood,
+                    selectedDate,
+                    selectedTime,
+                    selectedAmount,
+                    tableId
+                }
+            });
+        } else if (!selectedTime) {
+            alert('Please select a time.');
         } else {
             alert(`${tableId} is already booked.`);
         }
@@ -105,26 +126,41 @@ const BookingPage = () => {
 
     return (
         <div className="restaurant-map">
-            {/* Display selected food, date, amount, and time range */}
             <div className="selected-details">
                 <p>
-                    <strong>{selectedAmount} gäster</strong>, {selectedFood.toLowerCase()}, {formattedDate} {timeRange}
+                    <strong>{selectedAmount} gäster</strong>, {selectedFood.toLowerCase()}, {formattedDate} {startTime} - {endTime}
                     &nbsp;
                     <span className="edit-link" onClick={handleEditClick}>Ändra</span>
                 </p>
             </div>
 
+            {/* Time Selection Section */}
+            <div className="time-selection">
+                <h1 className="SelectATime-container">Select a Time</h1>
+                <br />
+                <div className="time-buttons">
+                    {timeSlots.map((timeSlot, index) => (
+                        <button
+                            key={index}
+                            className={`time-button ${selectedTime === timeSlot ? 'selected' : ''}`}
+                            onClick={() => setSelectedTime(timeSlot)}
+                        >
+                            {timeSlot}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             {/* Table Selection Section */}
             <div className="table-selection">
-                <h1>Select a Table</h1>
+                <h1 className="SelectATable-container">Select a Table</h1>
                 <img src="src/assets/RestaurantImager.png" alt="Restaurant Map" className="restaurant-map-img" />
-
                 {tables.map(table => (
                     <div 
                         key={table.id} 
                         className={`table ${table.id} ${bookedTables.includes(table.id) ? 'booked' : ''}`} 
                         style={{ top: table.top, left: table.left }}
-                        onClick={() => handleBooking(table.id)}
+                        onClick={() => handleTableClick(table.id)}
                     >
                         {table.id}
                     </div>
