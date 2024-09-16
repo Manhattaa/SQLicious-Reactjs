@@ -23,11 +23,21 @@ namespace SQLicious.Server.Controllers
             return Ok(booking);
         }
 
-        [HttpPost("Reserve")]
-        public async Task<ActionResult> CreateBooking(BookingCreationDTO booking)
+        [HttpPost("reserve")]
+        public async Task<IActionResult> ReserveTable([FromBody] BookingCreationDTO booking)
         {
-            await _bookingService.ReserveATableAsync(booking);
-            return Ok("Booking created successfully.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                await _bookingService.ReserveATableAsync(booking);
+                return Ok(new { Message = "Booking successfully created!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("Update")]
