@@ -79,7 +79,6 @@ const IndexPage = () => {
                         </div>
                     ))}
                 </div>
-
                 {/* Date Section */}
                 <h1 className="header-container">Datum</h1>
                 <div className="date-container">
