@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SQLicious.Server.Model.DTOs
+namespace SQLicious.Server.Model.DTOs.Customer
 {
     public class CustomerDTO
     {
@@ -8,6 +8,6 @@ namespace SQLicious.Server.Model.DTOs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public int? PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }
