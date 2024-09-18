@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SQLicious.Server.Data;
 using SQLicious.Server.Model;
+using SQLicious.Server.Model.DTOs.Table;
 
 namespace SQLicious.Server.Controllers
 {
@@ -37,12 +38,19 @@ namespace SQLicious.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Table>> PostTable(Table table)
+        public async Task<ActionResult<Table>> PostTable(TableCreationDTO tableDto)
         {
-            _context.Tables.Add(table);
+            // Map the DTO to the Table entity
+            var newTable = new Table
+            {
+                Capacity = tableDto.Capacity,
+                IsAvailable = tableDto.IsAvailable
+            };
+
+            _context.Tables.Add(newTable);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTable", new { id = table.TableId }, table);
+            return CreatedAtAction("GetTable", new { id = newTable.TableId }, newTable);
         }
 
         [HttpPut("{id}")]
