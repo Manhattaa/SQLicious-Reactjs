@@ -1,7 +1,7 @@
 ﻿using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Helpers;
 using SQLicious.Server.Model;
-using SQLicious.Server.Model.DTOs;
+using SQLicious.Server.Model.DTOs.Booking;
 using SQLicious.Server.Services.IServices;
 
 namespace SQLicious.Server.Services

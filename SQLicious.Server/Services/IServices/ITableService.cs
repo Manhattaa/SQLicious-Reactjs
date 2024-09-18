@@ -1,5 +1,5 @@
 ﻿using SQLicious.Server.Model;
-using SQLicious.Server.Model.DTOs;
+using SQLicious.Server.Model.DTOs.Table;
 
 namespace SQLicious.Server.Services.IServices
 {

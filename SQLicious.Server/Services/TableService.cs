@@ -1,6 +1,6 @@
 ﻿using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Model;
-using SQLicious.Server.Model.DTOs;
+using SQLicious.Server.Model.DTOs.Table;
 using SQLicious.Server.Services.IServices;
 
 namespace SQLicious.Server.Services
@@ -48,7 +48,8 @@ namespace SQLicious.Server.Services
                 return listOfTables.Select(t => new TableDTO
                 {
                     TableId = t.TableId,
-                    SeatingCapacity = t.Capacity
+                    SeatingCapacity = t.Capacity,
+                    IsAvailable = t.IsAvailable
                 }).ToList();
             }
             catch (Exception ex)
@@ -86,7 +87,8 @@ namespace SQLicious.Server.Services
                 return new TableDTO
                 {
                     TableId = table.TableId,
-                    SeatingCapacity = table.Capacity
+                    SeatingCapacity = table.Capacity,
+                    IsAvailable = table.IsAvailable
                 };
             }
             catch (Exception ex)

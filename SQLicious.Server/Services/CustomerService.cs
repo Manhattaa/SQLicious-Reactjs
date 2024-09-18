@@ -1,6 +1,6 @@
 ﻿using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Model;
-using SQLicious.Server.Model.DTOs;
+using SQLicious.Server.Model.DTOs.Customer;
 using SQLicious.Server.Services.IServices;
 
 namespace SQLicious.Server.Services
@@ -21,7 +21,8 @@ namespace SQLicious.Server.Services
                 {
                     FirstName = customer.FirstName,
                     LastName = customer.LastName,
-                    Email = customer.Email
+                    Email = customer.Email,
+                    PhoneNumber = customer.PhoneNumber,
                 };
 
                 await _customerRepository.CreateCustomerAsync(newCustomer);
