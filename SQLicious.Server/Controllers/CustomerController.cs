@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SQLicious.Server.Model.DTOs;
+using SQLicious.Server.Model.DTOs.Customer;
 using SQLicious.Server.Services.IServices;
 
 namespace SQLicious.Server.Controllers
