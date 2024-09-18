@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './bookingPage.css';
+import restaurantMap from '../assets/RestaurantImager.png';
 
 const BookingPage = () => {
     const location = useLocation();
@@ -15,23 +16,24 @@ const BookingPage = () => {
     };
 
     const baseDate = parseDate(selectedDate);
-    const [bookedTables, setBookedTables] = useState([]);
+    const [tables, setTables] = useState([]);  // State to store tables from API
     const [selectedTime, setSelectedTime] = useState('');
 
+    // Fetch available tables from the API
     useEffect(() => {
-        axios.get('/api/booking')
+        axios.get('https://localhost:7213/api/Table')  // Fetch table data with availability status
             .then(response => {
-                const booked = response.data.filter(table => table.isBooked).map(table => table.id);
-                setBookedTables(booked);
+                setTables(response.data);  // Save full table data
             })
             .catch(error => {
-                console.error('Error fetching bookings:', error);
+                console.error('Error fetching table data:', error);
+                alert('Failed to load table data. Please try again later.');
             });
     }, []);
 
     // Define meal start and end times based on selected food
     const getTimeRange = (food) => {
-        const currentMonth = baseDate.getMonth(); // 0-indexed, December is 11
+        const currentMonth = baseDate.getMonth();  // 0-indexed, December is 11
         switch (food) {
             case 'Frukost':
                 return ['07:00', '10:00'];
@@ -57,7 +59,7 @@ const BookingPage = () => {
         const timeSlots = [];
         const [startHour, startMinute] = start.split(':').map(Number);
         const [endHour, endMinute] = end.split(':').map(Number);
-        
+
         let currentHour = startHour;
         let currentMinute = startMinute;
 
@@ -88,26 +90,10 @@ const BookingPage = () => {
         });
     };
 
-    // Dummy data for tables
-    const tables = [
-        { id: 'table1'},
-        { id: 'table2'},
-        { id: 'table3'},
-        { id: 'table4'},
-        { id: 'table5'},
-        { id: 'table6'},
-        { id: 'table7'},
-        { id: 'table8'},
-        { id: 'table9'},
-        { id: 'table10'},
-        { id: 'table11'},
-        { id: 'table12'},
-        { id: 'table13'},
-        { id: 'table14'}
-    ];
-
     const handleTableClick = (tableId) => {
-        if (!bookedTables.includes(tableId) && selectedTime) {
+        const selectedTable = tables.find(table => table.tableId === tableId);
+
+        if (selectedTable && selectedTable.isAvailable && selectedTime) {
             navigate('/contact', {
                 state: {
                     selectedFood,
@@ -120,7 +106,7 @@ const BookingPage = () => {
         } else if (!selectedTime) {
             alert('Please select a time.');
         } else {
-            alert(`${tableId} is already booked.`);
+            alert(`${tableId} is not available.`);
         }
     };
 
@@ -133,7 +119,7 @@ const BookingPage = () => {
                     <span className="edit-link" onClick={handleEditClick}>Ändra</span>
                 </p>
             </div>
-
+    
             {/* Time Selection Section */}
             <div className="time-selection">
                 <h1 className="SelectATime-container">Select a Time</h1>
@@ -150,22 +136,19 @@ const BookingPage = () => {
                     ))}
                 </div>
             </div>
-
+                    <br />
             {/* Table Selection Section */}
-            <div className="table-selection">
-                <h1 className="SelectATable-container">Select a Table</h1>
-                <img src="src/assets/RestaurantImager.png" alt="Restaurant Map" className="restaurant-map-img" />
-                {tables.map(table => (
-                    <div 
-                        key={table.id} 
-                        className={`table ${table.id} ${bookedTables.includes(table.id) ? 'booked' : ''}`} 
-                        style={{ top: table.top, left: table.left }}
-                        onClick={() => handleTableClick(table.id)}
-                    >
-                        {table.id}
-                    </div>
-                ))}
-            </div>
+            <img src={restaurantMap} alt="Restaurant Map" className="restaurant-map-img" />
+            {tables.map(table => (
+                <button 
+                    key={table.tableId} 
+                    className={`table table${table.tableId} ${table.isAvailable ? '' : 'booked'}`}  
+                    style={{ top: table.top, left: table.left }} 
+                    onClick={() => handleTableClick(table.tableId)}
+                >
+                    {table.tableId}
+                </button>
+            ))}
         </div>
     );
 };
