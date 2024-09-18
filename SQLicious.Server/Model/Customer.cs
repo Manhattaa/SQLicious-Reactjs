@@ -12,6 +12,6 @@ namespace SQLicious.Server.Model
         public string LastName { get; set; }
         [Required]
         public string Email { get; set; }
-        public int? PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

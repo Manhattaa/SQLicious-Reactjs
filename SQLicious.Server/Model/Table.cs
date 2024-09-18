@@ -7,6 +7,6 @@ namespace SQLicious.Server.Model
         [Key]
         public int TableId { get; set; }
         public int Capacity { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        public bool IsAvailable {  get; set; }
     }
 }
