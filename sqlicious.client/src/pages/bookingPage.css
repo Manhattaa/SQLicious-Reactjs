@@ -55,20 +55,22 @@
 .table.booked {
     background-color: rgba(255, 0, 0, 0.5);
 }
-  .table1 { top: 9%; left: 29%; }
-  .table2 { top: 9%; left: 66%; }
-  .table3 { top: 29%; left: 27%; }
-  .table4 { top: 27%; left: 40%; }
-  .table5 { top: 27%; left: 54%; }
-  .table6 { top: 29%; left: 68%; }
-  .table7 { top: 42%; left: 34%; }
-  .table8 { top: 42%; left: 48%; }
-  .table9 { top: 42%; left: 60%; }
-  .table10 { top: 58%; left: 41%; }
-  .table11 { top: 58%; left: 54%; }
-  .table12 { top: 73%; left: 30.8%; }
-  .table13 { top: 76%; left: 47%; }
-  .table14 { top: 73%; left: 62.5%; }
+
+  .table1 { top: 34.5%; left: 35.3%; }
+  .table2 { top: 34.5%; left: 63.2%; }
+  .table3 { top: 46%; left: 33.9%; }
+  .table4 { top: 44.5%; left: 43.5%; }
+  .table5 { top: 44.5%; left: 53.5%; }
+  .table6 { top: 46.5%; left: 64%; }
+  .table7 { top: 53.5%; left: 38.7%; }
+  .table8 { top: 53.5%; left: 49.2%; }
+  .table9 { top: 53.5%; left: 58.9%; }
+  .table10 { top: 62.8%; left: 44.2%; }
+  .table11 { top: 62.8%; left: 53.9%; }
+  .table12 { top: 72%; left: 36.4%; }
+  .table13 { top: 74%; left: 48.8%; }
+  .table14 { top: 72%; left: 60.5%; }
+
   
   /* Mobile view adjustments */
   @media (max-width: 430px) {
