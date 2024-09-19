@@ -7,7 +7,7 @@ const Header = () => {
     return (
         <header className="sqlicious-header">
       <div className="logo">
-        <img src={logo} alt="SQLicious Logo" /> {/* Replace with your logo path */}
+        <img src={logo} alt="SQLicious Logo" />
       </div>
       <h1 className="site-title">
         <span className="sql">SQL</span>
