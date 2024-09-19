@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Model;
+using SQLicious.Server.Model.DTOs.Table;
 
 namespace SQLicious.Server.Data.Repository
 {
@@ -49,10 +50,18 @@ namespace SQLicious.Server.Data.Repository
             return await _context.Tables.FindAsync(tableId);
         }
 
-        public async Task UpdateTableAsync(Table table)
+        public async Task UpdateTableAsync(int tableId, UpdateTableDTO tableDto)
         {
-            _context.Tables.Update(table);
-            await _context.SaveChangesAsync();
+           
+            var table = await _context.Tables.FindAsync(tableId);
+
+            if (table != null)
+            {
+                table.IsAvailable = tableDto.IsAvailable;
+
+                _context.Tables.Update(table);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
