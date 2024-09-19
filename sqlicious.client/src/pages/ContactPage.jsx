@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createCustomer, reserveBooking } from '../Services/RestaurantService';
+import { createCustomer, updateTable, reserveBooking } from '../Services/RestaurantService';
 import './contactPage.css';
 
 const ContactPage = () => {
@@ -41,37 +41,44 @@ const ContactPage = () => {
                     phone: customerDetails.phone || null,
                 };
     
-                console.log('Customer Payload:', customer); // Log customer payload for debugging
-    
                 const customerResponse = await createCustomer(customer);
-                const customerId = customerResponse.data.id; // Assuming the backend returns the created customer ID
     
-                // Step 2: Reserve Booking
-                const bookedDateTime = new Date().toISOString(); // Ensure the date is in ISO format
-    
-                // Ensure amount of customers and tableId are set correctly
-                if (!selectedAmount || !tableId) {
-                    alert("Please select the number of customers and a table.");
-                    return;
+                if (!customerResponse || !customerResponse.data) {
+                    throw new Error('Customer ID is undefined in the response');
                 }
     
+                const customerId = customerResponse.data;
+    
+                // Step 2: Update Table (mark it as unavailable)
+                const tableUpdate = { isAvailable: false };
+                await updateTable(tableUpdate, tableId);
+    
+                // Step 3: Extract only the date part (YYYY-MM-DD) from selectedDate
+                const dateOnly = selectedDate.split('T')[0]; // Strip the time portion of the date
+                const combinedDateTime = `${dateOnly}T${selectedTime}:00`; // Append selected time
+    
+                console.log('Corrected DateTime:', combinedDateTime); // Log to ensure correctness
+    
                 const booking = {
-                    amountOfCustomers: selectedAmount, // Set to the selected number of customers
-                    bookedDateTime: bookedDateTime, // Use ISO format for bookedDateTime
-                    customerId: customerId, // Use the ID from the created customer
-                    tableId: tableId, // Use the selected tableId
+                    amountOfCustomers: selectedAmount,
+                    bookedDateTime: combinedDateTime, // Send corrected date and time string
+                    customerId: customerId,
+                    tableId: tableId,
                 };
     
-                console.log('Booking Payload:', booking); // Log booking payload for debugging
+                console.log('Booking Payload:', booking); // Log the payload being sent
     
+                // Step 4: Call reserveBooking API to create the booking
                 const bookingResponse = await reserveBooking(booking);
     
-                // Step 3: Navigate to Confirmation Page
-                navigate('/confirmation', { state: { ...location.state, customerDetails: customerResponse.data, bookingDetails: bookingResponse.data } });
+                // Step 5: Navigate to Confirmation Page
+                navigate('/confirmation', {
+                    state: { ...location.state, customerDetails: customerResponse.data, bookingDetails: bookingResponse.data }
+                });
+    
             } catch (error) {
-                if (error.response) {
-                    console.error('Error response:', error.response.data);
-                    alert(`Error: ${error.response.data.title || 'Unable to process request'}`);
+                if (error.response && error.response.data && error.response.data.errors) {
+                    console.error('Validation errors:', error.response.data.errors);
                 } else {
                     console.error('Error:', error);
                     alert('There was an issue processing the booking. Please try again.');
@@ -82,6 +89,8 @@ const ContactPage = () => {
         }
     };
     
+
+
     
 
     return (

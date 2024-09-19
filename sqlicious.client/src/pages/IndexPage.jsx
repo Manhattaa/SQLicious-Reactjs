@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Calendar from '../components/Calendar'; // Adjust path as necessary
 import '../pages/indexPage.scss';
+import santa from '../assets/santahat.png';
 
 const IndexPage = () => {
     const navigate = useNavigate();
@@ -48,9 +49,9 @@ const IndexPage = () => {
 
     // Handle custom date selection
     const handleCustomDateSelect = (date) => {
-        setCustomDate(date); // Set the selected custom date
-        setSelectedDate(date); // Also update selected date
-        setShowDatePicker(false); // Close the calendar overlay
+        setCustomDate(date); 
+        setSelectedDate(date); 
+        setShowDatePicker(false); 
     };
 
     // Compare dates (ignoring time) for highlighting
@@ -116,7 +117,7 @@ const IndexPage = () => {
 
                     <div
                         className="date-box"
-                        onClick={() => setShowDatePicker(true)} // Show the calendar overlay
+                        onClick={() => setShowDatePicker(true)}
                     >
                         <h2>Annan dag</h2>
                     </div>
@@ -144,8 +145,8 @@ const IndexPage = () => {
             {showDatePicker && (
                 <Calendar
                     selectedDate={customDate}
-                    onDateSelect={handleCustomDateSelect} // Pass the function to handle date selection
-                    onClose={() => setShowDatePicker(false)} // Close calendar when "Stäng" is clicked
+                    onDateSelect={handleCustomDateSelect}
+                    onClose={() => setShowDatePicker(false)} 
                 />
             )}
         </div>
