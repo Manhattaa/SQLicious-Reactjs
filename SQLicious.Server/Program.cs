@@ -111,7 +111,8 @@ namespace SQLicious.Server
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 
-            //Add Authorization
+            //Add Authorization and Authentication
+            builder.Services.AddAuthentication();
             builder.Services.AddAuthorization();
 
             builder.Services.AddEndpointsApiExplorer();
