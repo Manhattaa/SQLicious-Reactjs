@@ -16,20 +16,45 @@ const BookingPage = () => {
     };
 
     const baseDate = parseDate(selectedDate);
-    const [tables, setTables] = useState([]);  // State to store tables from API
+    const [tables, setTables] = useState([]); 
     const [selectedTime, setSelectedTime] = useState('');
 
     // Fetch available tables from the API
     useEffect(() => {
-        axios.get('https://localhost:7213/api/Table')  // Fetch table data with availability status
-            .then(response => {
-                setTables(response.data);  // Save full table data
-            })
-            .catch(error => {
-                console.error('Error fetching table data:', error);
-                alert('Failed to load table data. Please try again later.');
-            });
-    }, []);
+        const fetchTables = async () => {
+            try {
+                const tablesResponse = await axios.get('https://localhost:7213/api/Table');
+                const bookingsResponse = await axios.get('https://localhost:7213/api/Booking');
+    
+                // Filter bookings for the selected date
+                const bookingsForDate = bookingsResponse.data.filter(
+                    (booking) => {
+                        const bookingDate = new Date(booking.bookedDateTime);
+                        return bookingDate.toDateString() === baseDate.toDateString(); 
+                    }
+                );
+    
+                const updatedTables = tablesResponse.data.map((table) => {
+                    const isBooked = bookingsForDate.some((booking) => {
+                        const bookingTime = new Date(booking.bookedDateTime).toTimeString().substring(0, 5);  // Extract the time part (HH:MM)
+                        return booking.tableId === table.tableId && bookingTime === selectedTime;  // Compare time only
+                    });
+    
+                    return { ...table, isAvailable: !isBooked };  // Set isAvailable based on booking status
+                });
+    
+                setTables(updatedTables);
+            } catch (error) {
+                console.error('Error fetching tables or bookings:', error);
+            }
+        };
+    
+        if (selectedDate && selectedTime) {
+            fetchTables();
+        }
+    }, [selectedDate, selectedTime]);
+    
+    
 
     // Define meal start and end times based on selected food
     const getTimeRange = (food) => {
@@ -139,16 +164,19 @@ const BookingPage = () => {
                     <br />
             {/* Table Selection Section */}
             <img src={restaurantMap} alt="Restaurant Map" className="restaurant-map-img" />
-            {tables.map(table => (
-                <button 
-                    key={table.tableId} 
-                    className={`table table${table.tableId} ${table.isAvailable ? '' : 'booked'}`}  
-                    style={{ top: table.top, left: table.left }} 
-                    onClick={() => handleTableClick(table.tableId)}
+            {tables.map((table) => (
+            <button
+                key={table.tableId}
+                className={`table table${table.tableId} ${table.isAvailable ? '' : 'booked'}`}  // Add 'booked' class if unavailable
+                style={{ top: table.top, left: table.left }}
+                onClick={() => handleTableClick(table.tableId)}
+                disabled={!table.isAvailable}  // Disable the button if the table is booked
                 >
                     {table.tableId}
                 </button>
             ))}
+
+
         </div>
     );
 };
