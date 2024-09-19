@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SQLicious.Server.Data;
+using SQLicious.Server.Model;
 using SQLicious.Server.Model.DTOs.Booking;
 using SQLicious.Server.Model.DTOs.Customer;
 using SQLicious.Server.Services.IServices;
@@ -11,10 +14,12 @@ namespace SQLicious.Server.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
+        private readonly RestaurantContext _context;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IBookingService bookingService, RestaurantContext context)
         {
             _bookingService = bookingService;
+            _context = context;
         }
 
         [HttpGet("{bookingId}")]
@@ -25,21 +30,36 @@ namespace SQLicious.Server.Controllers
         }
 
         [HttpPost("reserve")]
-        public async Task<IActionResult> ReserveTable([FromBody] BookingCreationDTO booking)
+        public async Task<IActionResult> ReserveBooking([FromBody] BookingCreationDTO bookingDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var customer = await _context.Customers.FirstOrDefaultAsync(b => b.CustomerId == bookingDto.CustomerId);
+            if (customer == null)
+            {
+                return NotFound("Customer was not found.");
+            }
 
-            try
+            var table = await _context.Tables.FindAsync(bookingDto.TableId);
+            if (table == null)
             {
-                await _bookingService.ReserveATableAsync(booking);
-                return Ok(new { Message = "Booking successfully created!" });
+                return NotFound("Table was not found.");
             }
-            catch (Exception ex)
+
+            // Create the booking
+            var booking = new Booking
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+                AmountOfCustomers = bookingDto.AmountOfCustomers,
+                BookedDateTime = bookingDto.BookedDateTime,
+                CustomerId = bookingDto.CustomerId,
+                TableId = bookingDto.TableId
+            };
+
+            _context.Bookings.Add(booking);
+            await _context.SaveChangesAsync();
+
+            return Ok(booking);
         }
+
+
 
         [HttpPut("Update")]
         public async Task<ActionResult> UpdateBooking(BookingDTO booking)
