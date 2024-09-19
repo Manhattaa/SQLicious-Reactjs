@@ -23,21 +23,31 @@ namespace SQLicious.Server.Controllers
             return Ok(customer);
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult> CreateCustomer(CustomerCreationDTO customer)
+        [HttpPost("create")]
+        public async Task<ActionResult<int>> CreateCustomer(CustomerCreationDTO customer)
         {
-            await _customerService.CreateCustomerAsync(customer);
-            return Ok("Customer created successfully.");
+            var newCustomer = await _customerService.CreateCustomerAsync(customer);
+
+            // Log to ensure CustomerId is populated
+            Console.WriteLine($"Created Customer ID: {newCustomer.CustomerId}");
+
+            if (newCustomer.CustomerId > 0)
+            {
+                return Ok(newCustomer.CustomerId);
+            }
+
+            return BadRequest("Customer creation failed.");
         }
 
-        [HttpPut("Update")]
+
+        [HttpPut("update")]
         public async Task<ActionResult> UpdateCustomer(CustomerDTO customer)
         {
             await _customerService.UpdateCustomerAsync(customer);
             return Ok("Customer updated successfully.");
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("delete")]
         public async Task<ActionResult> DeleteCustomer(int customerId)
         {
             await _customerService.DeleteCustomerAsync(customerId);

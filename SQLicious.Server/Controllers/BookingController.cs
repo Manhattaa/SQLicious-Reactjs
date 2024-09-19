@@ -61,14 +61,14 @@ namespace SQLicious.Server.Controllers
 
 
 
-        [HttpPut("Update")]
+        [HttpPut("update")]
         public async Task<ActionResult> UpdateBooking(BookingDTO booking)
         {
             await _bookingService.UpdateBookingAsync(booking);
             return Ok("Booking updated successfully.");
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("delete")]
         public async Task<ActionResult> DeleteBooking(int bookingId)
         {
             await _bookingService.DeleteBookingAsync(bookingId);

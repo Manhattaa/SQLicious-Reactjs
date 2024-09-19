@@ -54,30 +54,21 @@ namespace SQLicious.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTable(int id, Table table)
+        public async Task<IActionResult> PutTable(int id, [FromBody] UpdateTableDTO tableDto)
         {
-            if (id != table.TableId)
+            var table = await _context.Tables.FindAsync(id);
+
+            if (table == null)
             {
-                return BadRequest();
+                return NotFound("Table not found.");
             }
 
-            _context.Entry(table).State = EntityState.Modified;
+            // Update the table entity with data from the DTO
+            table.IsAvailable = tableDto.IsAvailable;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TableExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            // Save the changes
+            _context.Tables.Update(table);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
