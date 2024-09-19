@@ -13,7 +13,7 @@ namespace SQLicious.Server.Services
         {
             _customerRepository = customerRepository;
         }
-        public async Task CreateCustomerAsync(CustomerCreationDTO customer)
+        public async Task<Customer> CreateCustomerAsync(CustomerCreationDTO customer)
         {
             try
             {
@@ -26,6 +26,8 @@ namespace SQLicious.Server.Services
                 };
 
                 await _customerRepository.CreateCustomerAsync(newCustomer);
+
+                return newCustomer;
             }
             catch (Exception ex)
             {
