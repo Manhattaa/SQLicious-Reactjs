@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import IndexPage from './pages/IndexPage';
 import BookingPage from './pages/BookingPage';
 import Header from './components/Header';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ContactPage from './pages/ContactPage';
 import ConfirmationPage from './pages/ConfirmationPage';
+import Calendar from '../src/components/Calendar'
 
 function App() {
     
