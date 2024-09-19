@@ -9,7 +9,7 @@ namespace SQLicious.Server.Services.IServices
         Task<TableDTO> GetTableByIdAsync(int tableId);
         Task CreateTableAsync(TableCreationDTO table);
         Task<IEnumerable<TableDTO>> GetListAllFreeTablesDateTime(DateTime dateTime);
-        Task UpdateTableAsync(TableDTO table);
+        Task UpdateTableAsync(int tableId, UpdateTableDTO table);
         Task DeleteTableAsync(int tableId);
     }
 }

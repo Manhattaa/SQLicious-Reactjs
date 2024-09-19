@@ -97,19 +97,18 @@ namespace SQLicious.Server.Services
             }
         }
 
-        public async Task UpdateTableAsync(TableDTO table)
+        public async Task UpdateTableAsync(int tableId, UpdateTableDTO tableDto)
         {
             try
             {
-                if (table != null)
+                if (tableDto != null)
                 {
                     var updatedTable = new Table
                     {
-                        TableId = table.TableId,
-                        Capacity = table.SeatingCapacity,
+                        IsAvailable = tableDto.IsAvailable,
                     };
 
-                    await _tableRepository.UpdateTableAsync(updatedTable);
+                    await _tableRepository.UpdateTableAsync(tableId, tableDto);
                 }
             }
             catch (Exception ex)
