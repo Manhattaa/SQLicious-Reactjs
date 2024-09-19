@@ -17,5 +17,28 @@ namespace SQLicious.Server.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Seed data for the Table table
+            modelBuilder.Entity<Table>().HasData(
+                new Table { TableId = 1, Capacity = 6, IsAvailable = true },
+                new Table { TableId = 2, Capacity = 6, IsAvailable = true },
+                new Table { TableId = 3, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 4, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 5, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 6, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 7, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 8, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 9, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 10, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 11, Capacity = 4, IsAvailable = true },
+                new Table { TableId = 12, Capacity = 8, IsAvailable = true },
+                new Table { TableId = 13, Capacity = 8, IsAvailable = true },
+                new Table { TableId = 14, Capacity = 8, IsAvailable = true }
+            );
+        }
     }
 }
