@@ -55,8 +55,8 @@ export const createTable = async (table) => {
     return await axios.post(`${tableEndpoints}/create`, table);
 };
 
-export const updateTable = async (table, tableId) => {
-    return await axios.put(`${tableEndpoints}/update/${tableId}`, table);
+export const updateTable = async (tableUpdate, tableId) => {
+    return await axios.put(`${tableEndpoints}/${tableId}`, tableUpdate);
 };
 
 export const deleteTable = async (tableId) => {
