@@ -21,7 +21,8 @@ namespace SQLicious.Server.Services
                 {
                     Name = menuItem.Name,
                     Price = menuItem.Price,
-                    IsAvailable = menuItem.IsAvailable
+                    IsAvailable = menuItem.IsAvailable,
+                    MenuType = menuItem.MenuType
                 };
 
                 await _menuItemRepository.CreateMenuItemAsync(newMenuItem);
