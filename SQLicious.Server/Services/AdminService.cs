@@ -33,6 +33,34 @@ namespace SQLicious.Server.Services
             return await _adminRepository.GetAdminById(id);
         }
 
+        public async Task<LoginResult> LoginAsync(string email, string password)
+        {
+            var admin = await _adminRepository.GetAdminByEmailAsync(email);
+
+            if (admin == null)
+            {
+                return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
+            }
+
+            if (!admin.EmailConfirmed)
+            {
+                return new LoginResult { Success = false, ErrorMessage = "The Email is not confirmed, please check your email for a confirmation link!" };
+            }
+
+            
+            var result = await _adminRepository.LoginAsync(email, password);
+
+            if (!result.Success)
+            {
+                return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
+            }
+
+            // Generate JWT token
+            var token = _authService.GenerateToken(admin);
+
+            return new LoginResult { Success = true, Token = token };
+        }
+
 
         public async Task<AccountCreationResult> CreateAdminAsync(CreateAccountRequestDTO request)
         {
@@ -128,28 +156,28 @@ namespace SQLicious.Server.Services
             return await _adminRepository.DeleteAdminAsync(password, currentUser);
         }
 
-        public async Task<LoginResult> LoginAsync(string email, string password)
-        {
-            var admin = await _adminRepository.GetAdminByEmailAsync(email);
+        //public async Task<LoginResult> LoginAsync(string email, string password)
+        //{
+        //    var admin = await _adminRepository.GetAdminByEmailAsync(email);
 
-            if (admin == null)
-            {
-                return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
-            }
+        //    if (admin == null)
+        //    {
+        //        return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
+        //    }
 
-            // Verify the password (assuming your repository handles password verification)
-            var result = await _adminRepository.LoginAsync(email, password);
+        //    // Verify the password (assuming your repository handles password verification)
+        //    var result = await _adminRepository.LoginAsync(email, password);
 
-            if (!result.Success)
-            {
-                return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
-            }
+        //    if (!result.Success)
+        //    {
+        //        return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
+        //    }
 
-            // Uses authentication service and the method for token generation
-            var token = _authService.GenerateToken(admin);
+        //    // Uses authentication service and the method for token generation
+        //    var token = _authService.GenerateToken(admin);
 
-            return new LoginResult { Success = true, Token = token };
-        }
+        //    return new LoginResult { Success = true, Token = token };
+        //}
 
 
         public async Task<IdentityResult> SendEmailVerificationAsync(string userId, string code)
