@@ -1,8 +1,14 @@
-﻿using SQLicious.Server.Data.Repository.IRepositories;
+﻿using Microsoft.AspNetCore.Identity;
+using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Helpers;
 using SQLicious.Server.Model;
 using SQLicious.Server.Model.DTOs.Booking;
+using SQLicious.Server.Model.DTOs.Customer;
+using SQLicious.Server.Model.DTOs.MenuItem;
+using SQLicious.Server.Options.Email;
+using SQLicious.Server.Options.Email.IEmail;
 using SQLicious.Server.Services.IServices;
+using System.Text.Encodings.Web;
 
 namespace SQLicious.Server.Services
 {
@@ -11,12 +17,15 @@ namespace SQLicious.Server.Services
         private readonly IBookingRepository _bookingRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly ITableRepository _tableRepository;
+        private readonly IEmailSender _emailSender;
+        private readonly string _baseUrl = "https://localhost:5173";
 
-        public BookingService(IBookingRepository bookingRepository, ICustomerRepository customerRepository, ITableRepository tableRepository)
+        public BookingService(IBookingRepository bookingRepository, ICustomerRepository customerRepository, ITableRepository tableRepository, IEmailSender emailSender)
         {
             _bookingRepository = bookingRepository;
             _customerRepository = customerRepository;
             _tableRepository = tableRepository;
+            _emailSender = emailSender;
         }
 
         public async Task DeleteBookingAsync(int bookingId)
@@ -76,14 +85,20 @@ namespace SQLicious.Server.Services
             }
         }
 
-        public async Task ReserveATableAsync(BookingCreationDTO booking)
+        public async Task<IdentityResult> ReserveATableAsync(BookingCreationDTO booking, CustomerCreationDTO customerDetails, MenuItemDTO menuItemDto)
         {
-            await CustomerTableExistsAsync(booking.CustomerId, booking.TableId);
-
-            DateTime dateTime = TimeHelper.DateTimeHelper(booking.BookedDateTime);
-
             try
             {
+                Console.WriteLine("ReserveATableAsync method is called.");
+
+                // Check if customer and table exist
+                await CustomerTableExistsAsync(booking.CustomerId, booking.TableId);
+                Console.WriteLine("Customer and table validation passed.");
+
+                DateTime dateTime = TimeHelper.DateTimeHelper(booking.BookedDateTime);
+                Console.WriteLine("Booking DateTime: " + dateTime);
+
+                // Step 1: Create the new booking
                 var newBooking = new Booking
                 {
                     AmountOfCustomers = booking.AmountOfCustomers,
@@ -93,12 +108,53 @@ namespace SQLicious.Server.Services
                 };
 
                 await _bookingRepository.ReserveATableAsync(newBooking);
+                Console.WriteLine("Booking created successfully.");
+
+                // Step 2: Before preparing the email
+                Console.WriteLine("Preparing email...");
+
+                string bookingConfirmationUrl = $"{_baseUrl}/confirm-booking?bookingId={newBooking.BookingId}";
+
+                string emailSubject = "SQLicious - Din Bokning är Bekräftad!";
+                string emailBody =
+                    $"<h2>Hej {customerDetails.FirstName} {customerDetails.LastName}!</h2>" +
+                    $"<p>Tack för din bokning på SQLicious! Här är dina bokningsdetaljer:<br>" +
+                    $"<strong>Måltid:</strong> {menuItemDto.MenuType}<br>" +
+                    $"<strong>Datum:</strong> {booking.BookedDateTime.ToShortDateString()}<br>" +
+                    $"<strong>Tid:</strong> {booking.BookedDateTime.ToShortTimeString()}<br>" +
+                    $"<strong>Bord:</strong> {booking.TableId}<br>" +
+                    $"<strong>Antal Gäster:</strong> {booking.AmountOfCustomers}<br><br>" +
+                    $"Du kan se eller ändra din bokning genom att klicka på följande länk:<br>" +
+                    $"<a href='{HtmlEncoder.Default.Encode(bookingConfirmationUrl)}'>Bekräfta eller ändra din bokning här</a>.<br><br>" +
+                    $"Vi ser fram emot ditt besök!<br>" +
+                    $"SQLicious</p>";
+
+                // Check if these values are null
+                Console.WriteLine($"Booking Confirmation URL: {bookingConfirmationUrl}");
+                Console.WriteLine($"Email Subject: {emailSubject}");
+                Console.WriteLine($"Email Body: {emailBody}");
+                Console.WriteLine($"Sending email to: {customerDetails.Email}");
+
+                // Step 3: Send confirmation email to the customer
+                var sendEmailResult = await _emailSender.SendEmailAsync(customerDetails.Email, emailSubject, emailBody);
+                if (!sendEmailResult.Success)
+                {
+                    return IdentityResult.Failed(new IdentityError
+                    {
+                        Description = $"Failed to send email: {string.Join(", ", sendEmailResult.ErrorMessage)}"
+                    });
+                }
+
+                // Step 4: Return success result
+                return IdentityResult.Success;
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while trying to create booking. {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
+                throw new Exception($"An error occurred while trying to create booking: {ex.Message}");
             }
         }
+
 
         private async Task<int> GetNextCustomerIdAsync()
         {
