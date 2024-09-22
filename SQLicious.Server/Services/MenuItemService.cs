@@ -22,6 +22,7 @@ namespace SQLicious.Server.Services
                     Name = menuItem.Name,
                     Price = menuItem.Price,
                     IsAvailable = menuItem.IsAvailable,
+                    Description = menuItem.Description,
                     MenuType = menuItem.MenuType
                 };
 
@@ -56,7 +57,9 @@ namespace SQLicious.Server.Services
                     MenuItemId = i.MenuItemId,
                     Name = i.Name,
                     Price = i.Price,
-                    IsAvailable = i.IsAvailable
+                    IsAvailable = i.IsAvailable,
+                    Description = i.Description,
+                    MenuType = i.MenuType
                 }).ToList();
             }
             catch (Exception ex)
@@ -95,7 +98,9 @@ namespace SQLicious.Server.Services
                         MenuItemId = menuItem.MenuItemId,
                         Name = menuItem.Name,
                         Price = menuItem.Price,
-                        IsAvailable = menuItem.IsAvailable
+                        IsAvailable = menuItem.IsAvailable,
+                        Description = menuItem.Description,
+                        MenuType = menuItem.MenuType
                     };
 
                     await _menuItemRepository.UpdateMenuItemAsync(updatedMenuItem);
