@@ -42,23 +42,19 @@ namespace SQLicious.Server.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateAdmin([FromBody] CreateAccountRequestDTO request)
         {
-            // Validate the incoming model based on the Data Annotations in CreateAccountRequestDTO
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Call the service method to create the admin
             var result = await _adminService.CreateAdminAsync(request);
 
-            // Check if the operation succeeded
             if (result.Success)
             {
-                // Return the success message along with the generated JWT token
+                // Return the JWT token with the success message
                 return Ok(new { Message = "Admin created successfully", Token = result.Token });
             }
 
-            // If there are errors, return them in the response
             return BadRequest(new { Message = result.Errors });
         }
 
@@ -96,17 +92,18 @@ namespace SQLicious.Server.Controllers
         }
 
         // POST: api/Admin/login
-        [Authorize]
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAdmin([FromBody] LoginRequestDTO model)
+        public async Task<IActionResult> LoginAdmin([FromForm]string email, [FromForm] string password)
         {
-            var result = await _adminService.LoginAsync(model.Email, model.Password);
+            var result = await _adminService.LoginAsync(email, password);
             if (result.Success)
             {
-                return Ok(new { Message = "Login successful" });
+                return Ok(new { Message = "Login successful", Token = result.Token });
             }
-
-            return Unauthorized(result.ErrorMessage);
+            else
+            {
+                return Unauthorized(result.ErrorMessage);
+            }
         }
 
         [HttpPost("confirm-email")]
