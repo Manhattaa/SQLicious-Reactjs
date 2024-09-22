@@ -16,7 +16,7 @@ function App() {
         <Route path="/" element={ <><Header /> <IndexPage /> </>} />
         <Route path="/booking" element={<><Header /> <BookingPage /> </>} />
         <Route path="/contact" element={<><Header /> <ContactPage /> </>} />
-        <Route path="/confirm" element={<><Header /> <ConfirmationPage /> </>} />
+        <Route path="/confirmation" element={<><Header /> <ConfirmationPage /> </>} />
       </Routes>
     </BrowserRouter>
             

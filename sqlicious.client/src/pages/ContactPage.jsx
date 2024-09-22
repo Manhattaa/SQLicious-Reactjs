@@ -11,12 +11,13 @@ const ContactPage = () => {
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return `${date.getDate()}/${date.getMonth() + 1}`;
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     };
-
+    
+    // Function to format the time in HH:MM format, excluding seconds
     const formatTime = (timeString) => {
-        const [hours, minutes] = timeString.split(':');
-        return `${hours}:${minutes.padStart(2, '0')}`;
+        const [hours, minutes] = timeString.split(':'); // Split time string by ':'
+        return `${hours}:${minutes}`; // Return only hours and minutes, excluding seconds
     };
 
     const formattedDate = formatDate(selectedDate);
@@ -73,9 +74,19 @@ const ContactPage = () => {
     
                 // Step 5: Navigate to Confirmation Page
                 navigate('/confirmation', {
-                    state: { ...location.state, customerDetails: customerResponse.data, bookingDetails: bookingResponse.data }
+                    state: { 
+                        ...location.state, 
+                        customerDetails: {
+                            firstName: customerDetails.firstName,
+                            lastName: customerDetails.lastName,
+                            email: customerDetails.email,
+                            phone: customerDetails.phone,
+                        },
+                        selectedDate: formatDate(selectedDate), // Convert date to local time
+                        selectedTime: formatTime(selectedTime), // Convert time to local time
+                        bookingDetails: bookingResponse.data
+                    }
                 });
-    
             } catch (error) {
                 if (error.response && error.response.data && error.response.data.errors) {
                     console.error('Validation errors:', error.response.data.errors);

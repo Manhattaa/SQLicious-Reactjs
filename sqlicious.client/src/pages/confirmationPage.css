@@ -1,0 +1,43 @@
+/* Main container */
+
+
+/* Heading styles */
+h3 {
+    color: #FF5733;
+    border-bottom: 2px solid #FF5733;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Strong text */
+strong {
+    color: #333;
+}
+
+/* Paragraph styles */
+p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Contact information section */
+h3 + p {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    div {
+        padding: 10px;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+}
