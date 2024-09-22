@@ -51,12 +51,14 @@ namespace SQLicious.Server
                 .AddDefaultTokenProviders();
 
             // Adding JWT Bearer Authentication
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
@@ -66,6 +68,10 @@ namespace SQLicious.Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")))
                     };
                 });
+
+            //Add Authorization and Authentication
+            builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization();
 
             // Add services to the container.
             builder.Services.AddDbContext<RestaurantContext>(options =>
@@ -109,11 +115,6 @@ namespace SQLicious.Server
             builder.Services.AddScoped<AuthenticationService>();
             //Email
             builder.Services.AddScoped<IEmailSender, EmailSender>();
-
-
-            //Add Authorization and Authentication
-            builder.Services.AddAuthentication();
-            builder.Services.AddAuthorization();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -164,6 +165,7 @@ namespace SQLicious.Server
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors();
