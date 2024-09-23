@@ -2,16 +2,20 @@
 using SQLicious.Server.Model.DTOs.MenuItem;
 using SQLicious.Server.Model;
 using SQLicious.Server.Services.IServices;
+using SQLicious.Server.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace SQLicious.Server.Services
 {
     public class MenuItemService : IMenuItemService
     {
         private readonly IMenuItemRepository _menuItemRepository;
+        private readonly RestaurantContext _context;
 
-        public MenuItemService(IMenuItemRepository menuItemRepository)
+        public MenuItemService(IMenuItemRepository menuItemRepository, RestaurantContext context)
         {
             _menuItemRepository = menuItemRepository;
+            _context = context;
         }
         public async Task CreateMenuItemAsync(MenuItemDTO menuItem)
         {
@@ -110,7 +114,25 @@ namespace SQLicious.Server.Services
             {
                 throw new Exception($"An error occured while trying to update the Menu Item: {ex.Message}");
             }
+        }
 
+        public async Task<IEnumerable<PDFMenuItemDTO>> GetMenuItemsByTypeAsync(MenuType menuType)
+        {
+            // Query the database for menu items that match the specified MenuType
+            var menuItems = await _context.MenuItems
+                .Where(mi => mi.MenuType == menuType)
+                .Select(mi => new PDFMenuItemDTO
+                {
+                    MenuItemId = mi.MenuItemId,
+                    Name = mi.Name,
+                    Description = mi.Description,
+                    Price = mi.Price,
+                    IsAvailable = mi.IsAvailable,
+                    MenuType = mi.MenuType
+                })
+                .ToListAsync();
+
+            return menuItems;
         }
     }
 }
