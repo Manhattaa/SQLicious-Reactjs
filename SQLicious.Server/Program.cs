@@ -16,6 +16,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SQLicious.Server.Options.Email;
 using SQLicious.Server.Options.Email.IEmail;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 
 namespace SQLicious.Server
 {
@@ -69,6 +73,7 @@ namespace SQLicious.Server
                     };
                 });
 
+
             //Add Authorization and Authentication
             builder.Services.AddAuthentication();
             builder.Services.AddAuthorization();
@@ -79,7 +84,11 @@ namespace SQLicious.Server
                 options.UseSqlServer(Environment.GetEnvironmentVariable("SQLICIOUS_CONNECTION"));
             });
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                });
 
             //CORS
             builder.Services.AddCors(options =>
@@ -115,6 +124,11 @@ namespace SQLicious.Server
             builder.Services.AddScoped<AuthenticationService>();
             //Email
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+            //PDF
+            builder.Services.AddScoped<IPDFService, PDFService>();
+            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            //HTTPClientFactory
+            builder.Services.AddHttpClient();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
