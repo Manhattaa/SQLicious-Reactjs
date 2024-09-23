@@ -10,5 +10,6 @@ namespace SQLicious.Server.Services.IServices
         Task CreateMenuItemAsync(MenuItemDTO menuItem);
         Task UpdateMenuItemAsync(MenuItems menuItem);
         Task DeleteMenuItemAsync(int menuItemId);
+        Task<IEnumerable<PDFMenuItemDTO>> GetMenuItemsByTypeAsync(MenuType menuType);
     }
 }
