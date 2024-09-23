@@ -13,6 +13,7 @@ namespace SQLicious.Server.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<MenuItems> MenuItems { get; set; }
+        public DbSet<MenuPDF> MenuPDFs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
