@@ -20,7 +20,7 @@ namespace SQLicious.Server.Data.Repository
 
         public async Task DeleteMenuItemAsync(int menuItemId)
         {
-            var menuItem = await _context.MenuItems.FindAsync();
+            var menuItem = await _context.MenuItems.FindAsync(menuItemId);
 
             if (menuItem != null)
             {
@@ -43,8 +43,13 @@ namespace SQLicious.Server.Data.Repository
 
         public async Task UpdateMenuItemAsync(MenuItems menuItem)
         {
-            _context.MenuItems.Update(menuItem);
-            await _context.SaveChangesAsync();
+            var existingMenuItem = await _context.MenuItems.FindAsync(menuItem.MenuItemId);
+            if (existingMenuItem != null)
+            {
+                // Update the tracked entity
+                _context.Entry(existingMenuItem).CurrentValues.SetValues(menuItem);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ namespace SQLicious.Server.Data.Repository
                 $"Om du har problem med att klicka på länken, kopiera och klistra in URL:en nedan i din webbläsare: <br>" +
                 $"{callbackUrl}<br><br><br>" +
                 $"Hör av dig om du har några frågor eller feedback genom att svara på detta mail.<br><br>" +
-                $"Allt gott,<br>" +
+                $"God fortsättning,<br>" +
                 $"SQLicious</p>";
 
             var sendEmailResult = await _emailSender.SendEmailAsync(admin.Email, emailSubject, emailBody);
