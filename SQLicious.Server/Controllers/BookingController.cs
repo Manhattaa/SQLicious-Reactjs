@@ -78,6 +78,7 @@ namespace SQLicious.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
         {
+            var bookings = _context.Bookings.Include(b => b.Customer).ToList();
             var bookingList = await _bookingService.GetAllBookingsAsync();
             return Ok(bookingList);
         }
