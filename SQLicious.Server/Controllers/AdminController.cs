@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SQLicious.Server.Model.DTOs.Admin;
 using SQLicious.Server.Model;
 using SQLicious.Server.Services.IServices;
+using Microsoft.AspNetCore.Identity;
 
 namespace SQLicious.Server.Controllers
 {
@@ -12,10 +13,13 @@ namespace SQLicious.Server.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
+        private readonly UserManager<Admin> _userManager;
+        private readonly SignInManager<Admin> _signInManager;
 
-        public AdminController(IAdminService adminService)
+        public AdminController(IAdminService adminService, UserManager<Admin> userManager)
         {
             _adminService = adminService;
+            _userManager = userManager;
         }
 
         // GET: api/Admin/all
@@ -23,7 +27,7 @@ namespace SQLicious.Server.Controllers
         public async Task<IActionResult> GetAllAdmins()
         {
             var admins = await _adminService.GetAllAdmins();
-            return Ok(admins);
+            return Ok(admins.Select(a => new { a.Id, a.Email }));
         }
 
         // GET: api/Admin/{id}
@@ -116,6 +120,24 @@ namespace SQLicious.Server.Controllers
             }
 
             return BadRequest(new { Message = "Email verification failed" });
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                return Ok("Password changed successfully.");
+            }
+
+            return BadRequest("Password change failed.");
         }
     }
 }

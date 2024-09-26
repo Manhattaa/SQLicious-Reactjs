@@ -78,9 +78,33 @@ namespace SQLicious.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookingDTO>>> GetAllBookings()
         {
-            var bookings = _context.Bookings.Include(b => b.Customer).ToList();
-            var bookingList = await _bookingService.GetAllBookingsAsync();
+            var bookings = await _context.Bookings
+                .Include(b => b.Customer)  // Eagerly load Customer data
+                .ToListAsync();
+
+            var bookingList = bookings.Select(b => new BookingDTO
+            {
+                BookingId = b.BookingId,
+                AmountOfCustomers = b.AmountOfCustomers,
+                TableId = b.TableId,
+                BookedDateTime = b.BookedDateTime,
+                Customer = b.Customer != null ? new CustomerDTO
+                {
+                    CustomerId = b.Customer.CustomerId,
+                    FirstName = b.Customer.FirstName,
+                    LastName = b.Customer.LastName,
+                    Email = b.Customer.Email
+                } : null  // handles null customer cases
+            }).ToList();
+
             return Ok(bookingList);
+        }
+
+        [HttpGet("BookingStatistics")]
+        public async Task<IActionResult> GetBookingStatistics()
+        {
+            var totalBookings = await _context.Bookings.CountAsync();
+            return Ok(new { totalBookings });
         }
     }
 }
