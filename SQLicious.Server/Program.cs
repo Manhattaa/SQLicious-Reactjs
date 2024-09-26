@@ -50,9 +50,14 @@ namespace SQLicious.Server
             });
 
             // Identity Setup
-            builder.Services.AddIdentity<Admin, IdentityRole>()
+            builder.Services.AddIdentity<Admin, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+                options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+            })
                 .AddEntityFrameworkStores<RestaurantContext>()
                 .AddDefaultTokenProviders();
+        
 
             // Adding JWT Bearer Authentication
             builder.Services.AddAuthentication(options =>
