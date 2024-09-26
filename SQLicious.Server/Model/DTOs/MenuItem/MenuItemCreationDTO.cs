@@ -1,4 +1,6 @@
-﻿namespace SQLicious.Server.Model.DTOs.MenuItem
+﻿using SQLicious.Server.Model;
+
+namespace SQLicious.Server.Model.DTOs.MenuItem
 {
     public class MenuItemCreationDTO
     {
