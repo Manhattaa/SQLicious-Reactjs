@@ -97,16 +97,26 @@ namespace SQLicious.Server.Controllers
 
         // POST: api/Admin/login
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAdmin([FromForm]string email, [FromForm] string password)
+        public async Task<IActionResult> LoginAdmin([FromForm] string email, [FromForm] string password)
         {
             var result = await _adminService.LoginAsync(email, password);
             if (result.Success)
             {
-                return Ok(new { Message = "Login successful", Token = result.Token });
+                // Create a cookie for the JWT token
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddHours(1) 
+                };
+                Response.Cookies.Append("JWTToken", result.Token, cookieOptions);
+
+                return Ok(new { Message = "Login successful", token = result.Token });
             }
             else
             {
-                return Unauthorized(result.ErrorMessage);
+                return Unauthorized(new { message = result.ErrorMessage } );
             }
         }
 
