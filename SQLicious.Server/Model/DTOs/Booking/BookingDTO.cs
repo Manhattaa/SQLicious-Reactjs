@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using SQLicious.Server.Model.DTOs.Customer;
+using System.Text.Json.Serialization;
 
 namespace SQLicious.Server.Model.DTOs.Booking
 {
@@ -9,5 +10,7 @@ namespace SQLicious.Server.Model.DTOs.Booking
         public int CustomerId { get; set; }
         public int TableId { get; set; }
         public DateTime BookedDateTime { get; set; }
+
+        public CustomerDTO Customer { get; set; }
     }
 }
