@@ -1,4 +1,3 @@
- 
 using SQLicious.Server.Data.Repository.IRepositories;
 using SQLicious.Server.Data.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +56,7 @@ namespace SQLicious.Server
             })
                 .AddEntityFrameworkStores<RestaurantContext>()
                 .AddDefaultTokenProviders();
-        
+
 
             // Adding JWT Bearer Authentication
             builder.Services.AddAuthentication(options =>
@@ -68,19 +67,17 @@ namespace SQLicious.Server
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-                        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")))
-                    };
-                });
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                    ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")))
+                };
+            });
 
-
-            //Add Authorization and Authentication
-            builder.Services.AddAuthentication();
+            // Add Authorization
             builder.Services.AddAuthorization();
 
             // Add services to the container.
@@ -95,7 +92,7 @@ namespace SQLicious.Server
                     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 });
 
-            //CORS
+            // CORS
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -106,34 +103,6 @@ namespace SQLicious.Server
                         .AllowCredentials();
                 });
             });
-         
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            //Table
-            builder.Services.AddScoped<ITableRepository, TableRepository>();
-            builder.Services.AddScoped<ITableService, TableService>();
-            //Booking
-            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-            builder.Services.AddScoped<IBookingService, BookingService>();
-            //Customer
-            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-            builder.Services.AddScoped<ICustomerService, CustomerService>();
-            //Admin
-            builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-            builder.Services.AddScoped<IAdminService, AdminService>();
-            //MenuItem
-            builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
-            builder.Services.AddScoped<IMenuItemService, MenuItemService>();
-            //Jwt & Authentication
-            builder.Services.AddScoped<JwtRepository>();
-            builder.Services.AddScoped<AuthenticationService>();
-            //Email
-            builder.Services.AddScoped<IEmailSender, EmailSender>();
-            //PDF
-            builder.Services.AddScoped<IPDFService, PDFService>();
-            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
-            //HTTPClientFactory
-            builder.Services.AddHttpClient();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -152,23 +121,41 @@ namespace SQLicious.Server
 
                 // Apply Bearer authentication globally in Swagger UI
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
                 {
-                    new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
                         },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header,
-                    },
-                    new List<string>()
-                }
+                        new List<string>()
+                    }
+                });
             });
-            });
+
+            // Service Registrations
+            builder.Services.AddScoped<ITableRepository, TableRepository>();
+            builder.Services.AddScoped<ITableService, TableService>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+            builder.Services.AddScoped<IMenuItemService, MenuItemService>();
+            builder.Services.AddScoped<JwtRepository>();
+            builder.Services.AddScoped<AuthenticationService>();
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IPDFService, PDFService>();
+            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            builder.Services.AddHttpClient();
 
             var app = builder.Build();
 
@@ -184,7 +171,7 @@ namespace SQLicious.Server
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
+            app.UseAuthentication(); 
             app.UseAuthorization();
 
             app.UseCors();
