@@ -15,12 +15,16 @@ namespace SQLicious.Server.Services
         private readonly IAdminRepository _adminRepository;
         private readonly IEmailSender _emailSender;
         private readonly AuthenticationService _authService;
+        private readonly SignInManager<Admin> _signInManager;
+        private readonly UserManager<Admin> _userManager;
 
-        public AdminService(IAdminRepository adminRepository, IEmailSender emailSender, AuthenticationService authService)
+        public AdminService(IAdminRepository adminRepository, IEmailSender emailSender, AuthenticationService authService, SignInManager<Admin> signInManager, UserManager<Admin> userManager)
         {
             _adminRepository = adminRepository;
             _emailSender = emailSender;
             _authService = authService;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public async Task<IEnumerable<Admin>> GetAllAdmins()
@@ -37,6 +41,8 @@ namespace SQLicious.Server.Services
         {
             var admin = await _adminRepository.GetAdminByEmailAsync(email);
 
+            var isTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(admin);
+
             if (admin == null)
             {
                 return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
@@ -47,18 +53,32 @@ namespace SQLicious.Server.Services
                 return new LoginResult { Success = false, ErrorMessage = "The Email is not confirmed, please check your email for a confirmation link!" };
             }
 
-            
+            //var IsTwoFactorAuth = false;
+            //if (resultAuth.RequiresTwoFactor)
+            //{
+            //    IsTwoFactorAuth = true;
+            //}
+
+
             var result = await _adminRepository.LoginAsync(email, password);
 
             if (!result.Success)
             {
-                return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
+                if (isTwoFactorEnabled)
+                {
+                    return new LoginResult { Success = false, ErrorMessage = "You need 2FA!!!" };
+                }
+                else
+                {
+                    return new LoginResult { Success = false, ErrorMessage = "Invalid Email or Password" };
+                }
+
             }
 
             // Generate JWT token
             var token = _authService.GenerateToken(admin);
 
-            return new LoginResult { Success = true, Token = token };
+            return new LoginResult { Success = true, Token = token, HasTwoFactorAuthentication = isTwoFactorEnabled };
         }
 
 

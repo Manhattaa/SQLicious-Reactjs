@@ -100,15 +100,29 @@ namespace SQLicious.Server.Controllers
         public async Task<IActionResult> LoginAdmin([FromForm]string email, [FromForm] string password)
         {
             var result = await _adminService.LoginAsync(email, password);
+
+            
+
             if (result.Success)
             {
-                return Ok(new { Message = "Login successful", Token = result.Token });
+                if (result.HasTwoFactorAuthentication)
+                {
+                    return Ok(new { Message = "The Admin account needs to have Two Factor Authentication.", Token = result.Token });
+                }
+                else
+                {
+                    return Ok(new { Message = "Login successful", Token = result.Token });
+                }
             }
+            
             else
             {
                 return Unauthorized(result.ErrorMessage);
             }
         }
+        
+
+
 
         [HttpPost("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequestDTO model)

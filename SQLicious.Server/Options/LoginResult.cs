@@ -8,5 +8,6 @@
 
         public static LoginResult Failed(string message) => new LoginResult { Success = false, ErrorMessage = message };
         public static LoginResult Successful(string token) => new LoginResult { Success = true, Token = token };
+        public bool HasTwoFactorAuthentication { get; set; }
     }
 }
