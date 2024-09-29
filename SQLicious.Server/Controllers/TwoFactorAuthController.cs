@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QRCoder;
+using SQLicious.Server.Helpers;
 using SQLicious.Server.Model;
 using System.IO;
 using System.Threading.Tasks;
@@ -23,8 +24,7 @@ namespace SQLicious.Server.Controllers
         }
 
         // Enable 2FA for the current admin
-        [HttpPost("enable-2fa")]
-        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> EnableTwoFactorAuthentication()
         {
             var admin = await _userManager.GetUserAsync(User);
@@ -39,15 +39,28 @@ namespace SQLicious.Server.Controllers
                 return BadRequest("Two-factor authentication is already enabled.");
             }
 
-            // Generate a new 2FA token for the user
-            var token = await _userManager.GenerateTwoFactorTokenAsync(admin, "Email");
+            if (string.IsNullOrEmpty(admin.AuthenticatorKey))
+            {
+                // Generate a new authenticator key
+                await _userManager.ResetAuthenticatorKeyAsync(admin);
+                var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(admin);
 
-            return Ok(new { Token = token });
+                // Hash the key using the helper class
+                admin.AuthenticatorKey = AuthenticatorHelper.HashAuthenticatorKey(unformattedKey);
+
+                // Save the hashed key in the database
+                var result = await _userManager.UpdateAsync(admin);
+                if (!result.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Error storing authenticator key.");
+                }
+            }
+
+            return Ok(new { Message = "Two-factor authentication enabled successfully." });
         }
 
-        // Generate QR code for 2FA setup
-        [HttpGet("generate-qr-code")]
-        [Authorize]
+            // Generate QR code for 2FA setup
+            [HttpGet("generate-qr-code")]
         public async Task<IActionResult> GenerateQrCode()
         {
             var admin = await _userManager.GetUserAsync(User);
@@ -78,7 +91,6 @@ namespace SQLicious.Server.Controllers
 
         // Verify 2FA token
         [HttpPost("verify-2fa")]
-        [Authorize]
         public async Task<IActionResult> VerifyTwoFactorCode([FromForm] string code)
         {
             var admin = await _userManager.GetUserAsync(User);
@@ -87,18 +99,25 @@ namespace SQLicious.Server.Controllers
                 return NotFound("Admin not found");
             }
 
-            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(code, isPersistent: false, rememberClient: false);
-            if (!result.Succeeded)
+            // Get the stored hashed authenticator key
+            var hashedKey = admin.AuthenticatorKey;
+
+            // Check the code using the hashed key
+            var isValidCode = await _userManager.VerifyTwoFactorTokenAsync(admin, TokenOptions.DefaultAuthenticatorProvider, code);
+
+            if (!isValidCode)
             {
                 return BadRequest("Invalid 2FA code.");
             }
+
+            // Enable 2FA for this admin
+            await _userManager.SetTwoFactorEnabledAsync(admin, true);
 
             return Ok("2FA setup verified successfully.");
         }
 
         // Disable 2FA
         [HttpPost("disable-2fa")]
-        [Authorize]
         public async Task<IActionResult> DisableTwoFactorAuthentication()
         {
             var admin = await _userManager.GetUserAsync(User);
