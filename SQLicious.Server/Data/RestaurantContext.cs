@@ -544,6 +544,73 @@ namespace SQLicious.Server.Data
     new Booking { BookingId = 249, CustomerId = 249, TableId = 6, AmountOfCustomers = 4, BookedDateTime = new DateTime(2024, 9, 30, 11, 30, 0) },
     new Booking { BookingId = 250, CustomerId = 250, TableId = 7, AmountOfCustomers = 3, BookedDateTime = new DateTime(2024, 9, 30, 12, 0, 0) }
     );
+            modelBuilder.Entity<MenuItems>().HasData(
+            new MenuItems { MenuItemId = 1, Name = "Våfflor med bär och grädde", Description = "Våfflorna serveras med färska bär och grädde", Price = 89, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 2, Name = "Gravad lax och knäckebröd", Description = "Gravad lax serveras med krispigt knäckebröd", Price = 99, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 3, Name = "Omelett med svamp och spenat", Description = "Omelett med färsk svamp och spenat", Price = 89, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 4, Name = "Kaffe och smörgås", Description = "Nyrostat kaffe serveras med en smörgås toppad med ost, skinka och gurka", Price = 79, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 5, Name = "Chiafrön med yoghurt och honung", Description = "Chiafrön serveras med krämig yoghurt och ringlad honung", Price = 79, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 6, Name = "Ägg och bacon", Description = "Två stekta ägg serveras med krispig bacon", Price = 89, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 7, Name = "Fruktfat", Description = "Ett urval av färsk, säsongsbetonad frukt", Price = 69, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 8, Name = "Färskpressad juice", Description = "Färskpressad apelsin- eller äppeljuice", Price = 49, IsAvailable = true, MenuType = (MenuType)0 },
+
+            new MenuItems { MenuItemId = 9, Name = "Äggröra med lax och gräslök", Description = "Krämig äggröra med rökt lax och färsk gräslök", Price = 119, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 10, Name = "Skagenröra på toast", Description = "Klassisk skagenröra serverad på nyrostat bröd", Price = 139, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 11, Name = "Belgiska våfflor med sirap och bär", Description = "Belgiska våfflor serverade med sirap och färska bär", Price = 129, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 12, Name = "Köttbullar och potatisgratäng", Description = "Svenska köttbullar serverade med krämig potatisgratäng", Price = 159, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 13, Name = "Avokado-toast med pocherat ägg", Description = "Avokado-toast toppad med ett pocherat ägg", Price = 119, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 14, Name = "Lättgravad lax med rostat bröd", Description = "Lättgravad lax serverad med nyrostat bröd", Price = 139, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 15, Name = "Rösti med crème fraîche och rökt lax", Description = "Krispig rösti toppad med crème fraîche och rökt lax", Price = 149, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 16, Name = "Fruktsallad med mynta", Description = "Fräsch fruktsallad smaksatt med mynta", Price = 89, IsAvailable = true, MenuType = (MenuType)1 },
+
+            new MenuItems { MenuItemId = 17, Name = "Räksmörgås", Description = "Klassisk räksmörgås på rågbröd med ägg och majonnäs", Price = 179, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 18, Name = "Svenska köttbullar med potatismos", Description = "Svenska köttbullar serverade med potatismos, lingon och gräddsås", Price = 159, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 19, Name = "Laxfilé med dillstuvad potatis", Description = "Grillad laxfilé serverad med dillstuvad potatis", Price = 189, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 20, Name = "Pannbiff med lök", Description = "Pannbiff serverad med karamelliserad lök och potatis", Price = 149, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 21, Name = "Vegetarisk lasagne med spenat och ricotta", Description = "Vegetarisk lasagne fylld med spenat och ricotta", Price = 139, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 22, Name = "Caesarsallad med kyckling", Description = "Caesarsallad toppad med grillad kyckling", Price = 149, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 23, Name = "Fisksoppa med saffran och aioli", Description = "Fisksoppa smaksatt med saffran och serverad med aioli", Price = 179, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 24, Name = "Kycklinggryta med svamp och timjan", Description = "Krämig kycklinggryta med svamp och timjan", Price = 169, IsAvailable = true, MenuType = (MenuType)2 },
+
+            new MenuItems { MenuItemId = 25, Name = "Grillad entrecôte med rödvinssås", Description = "Grillad entrecôte serverad med rödvinssås och rostad potatis", Price = 269, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 26, Name = "Fiskgratäng med räkor och dill", Description = "Krämig fiskgratäng toppad med räkor och dill", Price = 219, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 27, Name = "Vildsvinsstek med kantareller", Description = "Mör vildsvinsstek serverad med kantareller", Price = 279, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 28, Name = "Oxfilé med potatisgratäng och bearnaisesås", Description = "Oxfilé serverad med potatisgratäng och bearnaisesås", Price = 299, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 29, Name = "Sparrisrisotto med parmesan och tryffelolja", Description = "Krämig sparrisrisotto toppad med parmesan och tryffelolja", Price = 219, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 30, Name = "Renskav med potatismos och lingonsylt", Description = "Renskav serverad med potatismos och lingonsylt", Price = 239, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 31, Name = "Havskräftor med vitlökssmör", Description = "Färska havskräftor serverade med vitlökssmör", Price = 249, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 32, Name = "Vegetarisk biff med quinoa och grillade grönsaker", Description = "Vegetarisk biff serverad med quinoa och grillade grönsaker", Price = 199, IsAvailable = true, MenuType = (MenuType)3 },
+
+            new MenuItems { MenuItemId = 33, Name = "Smoothie bowl", Description = "Fräsch smoothie bowl med banan, bär och granola", Price = 79, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 34, Name = "Ägg Benedict", Description = "Pocherade ägg med hollandaisesås på rostat bröd", Price = 119, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 35, Name = "Pannkakor med sirap", Description = "Amerikanska pannkakor med lönnsirap och smör", Price = 99, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 36, Name = "Gröt med äppelkompott", Description = "Havregrynsgröt toppad med äppelkompott och kanel", Price = 69, IsAvailable = true, MenuType = (MenuType)0 },
+            new MenuItems { MenuItemId = 37, Name = "Fralla med ost och skinka", Description = "Nygräddad fralla med ost och skinka", Price = 49, IsAvailable = true, MenuType = (MenuType)0 },
+
+            new MenuItems { MenuItemId = 38, Name = "Chiapudding med kokos", Description = "Chiapudding smaksatt med kokos och toppad med bär", Price = 89, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 39, Name = "Franska toast med bär", Description = "Fransk toast toppad med färska bär och sirap", Price = 109, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 40, Name = "Smashed avocado", Description = "Smashed avocado på rostat surdegsbröd med chili flakes", Price = 119, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 41, Name = "Shakshuka", Description = "Shakshuka med ägg, tomat och paprika", Price = 129, IsAvailable = true, MenuType = (MenuType)1 },
+            new MenuItems { MenuItemId = 42, Name = "Croque Monsieur", Description = "Klassisk Croque Monsieur med ost och skinka", Price = 149, IsAvailable = true, MenuType = (MenuType)1 },
+
+            new MenuItems { MenuItemId = 43, Name = "Kycklingspett med tzatziki", Description = "Grillade kycklingspett serverade med tzatziki och sallad", Price = 159, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 44, Name = "Halloumiburgare", Description = "Vegetarisk halloumiburgare med rostad paprika och tzatziki", Price = 139, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 45, Name = "Rödbetsbiffar med chevre", Description = "Rödbetsbiffar serverade med chevre och honung", Price = 149, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 46, Name = "Pasta Carbonara", Description = "Klassisk pasta carbonara med guancale och parmesan", Price = 169, IsAvailable = true, MenuType = (MenuType)2 },
+            new MenuItems { MenuItemId = 47, Name = "Pizza Margherita", Description = "Vedugnsbakad pizza med tomat, mozzarella och basilika", Price = 139, IsAvailable = true, MenuType = (MenuType)2 },
+
+            new MenuItems { MenuItemId = 48, Name = "Lammlägg med rosmarin", Description = "Mör lammlägg serverad med rosmarinsky och potatisgratäng", Price = 279, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 49, Name = "Hummersoppa", Description = "Krämig hummersoppa smaksatt med konjak", Price = 249, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 50, Name = "Grillad lax med citronsås", Description = "Grillad lax serverad med citronsås och sparris", Price = 219, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 51, Name = "Risotto med svamp och tryffel", Description = "Krämig risotto med svamp och tryffelolja", Price = 239, IsAvailable = true, MenuType = (MenuType)3 },
+            new MenuItems { MenuItemId = 52, Name = "Torskrygg med brynt smör", Description = "Torskrygg serverad med brynt smör och pepparrot", Price = 259, IsAvailable = true, MenuType = (MenuType)3 },
+
+            new MenuItems { MenuItemId = 53, Name = "Julbord - Vuxen", Description = "Traditionellt Julbord i riktig SQLicious anda!", Price = 349, IsAvailable = true, MenuType = (MenuType)4 },
+            new MenuItems { MenuItemId = 54, Name = "Julbord - Barn", Description = "OBS: Gäller ej barn under 6 år.", Price = 129, IsAvailable = true, MenuType = (MenuType)4 },
+            new MenuItems { MenuItemId = 55, Name = "Apotekarnes Julmust", Description = "Ingen vet hur man uttalar detta.", Price = 29, IsAvailable = true, MenuType = (MenuType)4 }
+
+            );
+
         }
     }
 }
