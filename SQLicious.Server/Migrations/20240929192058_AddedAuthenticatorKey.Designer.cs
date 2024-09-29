@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SQLicious.Server.Data;
 
@@ -11,9 +12,11 @@ using SQLicious.Server.Data;
 namespace SQLicious.Server.Migrations
 {
     [DbContext(typeof(RestaurantContext))]
-    partial class RestaurantContextModelSnapshot : ModelSnapshot
+    [Migration("20240929192058_AddedAuthenticatorKey")]
+    partial class AddedAuthenticatorKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4361,186 +4364,6 @@ namespace SQLicious.Server.Migrations
                         new
                         {
                             MenuItemId = 33,
-                            Description = "Fräsch smoothie bowl med banan, bär och granola",
-                            IsAvailable = true,
-                            MenuType = 0,
-                            Name = "Smoothie bowl",
-                            Price = 79f
-                        },
-                        new
-                        {
-                            MenuItemId = 34,
-                            Description = "Pocherade ägg med hollandaisesås på rostat bröd",
-                            IsAvailable = true,
-                            MenuType = 0,
-                            Name = "Ägg Benedict",
-                            Price = 119f
-                        },
-                        new
-                        {
-                            MenuItemId = 35,
-                            Description = "Amerikanska pannkakor med lönnsirap och smör",
-                            IsAvailable = true,
-                            MenuType = 0,
-                            Name = "Pannkakor med sirap",
-                            Price = 99f
-                        },
-                        new
-                        {
-                            MenuItemId = 36,
-                            Description = "Havregrynsgröt toppad med äppelkompott och kanel",
-                            IsAvailable = true,
-                            MenuType = 0,
-                            Name = "Gröt med äppelkompott",
-                            Price = 69f
-                        },
-                        new
-                        {
-                            MenuItemId = 37,
-                            Description = "Nygräddad fralla med ost och skinka",
-                            IsAvailable = true,
-                            MenuType = 0,
-                            Name = "Fralla med ost och skinka",
-                            Price = 49f
-                        },
-                        new
-                        {
-                            MenuItemId = 38,
-                            Description = "Chiapudding smaksatt med kokos och toppad med bär",
-                            IsAvailable = true,
-                            MenuType = 1,
-                            Name = "Chiapudding med kokos",
-                            Price = 89f
-                        },
-                        new
-                        {
-                            MenuItemId = 39,
-                            Description = "Fransk toast toppad med färska bär och sirap",
-                            IsAvailable = true,
-                            MenuType = 1,
-                            Name = "Franska toast med bär",
-                            Price = 109f
-                        },
-                        new
-                        {
-                            MenuItemId = 40,
-                            Description = "Smashed avocado på rostat surdegsbröd med chili flakes",
-                            IsAvailable = true,
-                            MenuType = 1,
-                            Name = "Smashed avocado",
-                            Price = 119f
-                        },
-                        new
-                        {
-                            MenuItemId = 41,
-                            Description = "Shakshuka med ägg, tomat och paprika",
-                            IsAvailable = true,
-                            MenuType = 1,
-                            Name = "Shakshuka",
-                            Price = 129f
-                        },
-                        new
-                        {
-                            MenuItemId = 42,
-                            Description = "Klassisk Croque Monsieur med ost och skinka",
-                            IsAvailable = true,
-                            MenuType = 1,
-                            Name = "Croque Monsieur",
-                            Price = 149f
-                        },
-                        new
-                        {
-                            MenuItemId = 43,
-                            Description = "Grillade kycklingspett serverade med tzatziki och sallad",
-                            IsAvailable = true,
-                            MenuType = 2,
-                            Name = "Kycklingspett med tzatziki",
-                            Price = 159f
-                        },
-                        new
-                        {
-                            MenuItemId = 44,
-                            Description = "Vegetarisk halloumiburgare med rostad paprika och tzatziki",
-                            IsAvailable = true,
-                            MenuType = 2,
-                            Name = "Halloumiburgare",
-                            Price = 139f
-                        },
-                        new
-                        {
-                            MenuItemId = 45,
-                            Description = "Rödbetsbiffar serverade med chevre och honung",
-                            IsAvailable = true,
-                            MenuType = 2,
-                            Name = "Rödbetsbiffar med chevre",
-                            Price = 149f
-                        },
-                        new
-                        {
-                            MenuItemId = 46,
-                            Description = "Klassisk pasta carbonara med guancale och parmesan",
-                            IsAvailable = true,
-                            MenuType = 2,
-                            Name = "Pasta Carbonara",
-                            Price = 169f
-                        },
-                        new
-                        {
-                            MenuItemId = 47,
-                            Description = "Vedugnsbakad pizza med tomat, mozzarella och basilika",
-                            IsAvailable = true,
-                            MenuType = 2,
-                            Name = "Pizza Margherita",
-                            Price = 139f
-                        },
-                        new
-                        {
-                            MenuItemId = 48,
-                            Description = "Mör lammlägg serverad med rosmarinsky och potatisgratäng",
-                            IsAvailable = true,
-                            MenuType = 3,
-                            Name = "Lammlägg med rosmarin",
-                            Price = 279f
-                        },
-                        new
-                        {
-                            MenuItemId = 49,
-                            Description = "Krämig hummersoppa smaksatt med konjak",
-                            IsAvailable = true,
-                            MenuType = 3,
-                            Name = "Hummersoppa",
-                            Price = 249f
-                        },
-                        new
-                        {
-                            MenuItemId = 50,
-                            Description = "Grillad lax serverad med citronsås och sparris",
-                            IsAvailable = true,
-                            MenuType = 3,
-                            Name = "Grillad lax med citronsås",
-                            Price = 219f
-                        },
-                        new
-                        {
-                            MenuItemId = 51,
-                            Description = "Krämig risotto med svamp och tryffelolja",
-                            IsAvailable = true,
-                            MenuType = 3,
-                            Name = "Risotto med svamp och tryffel",
-                            Price = 239f
-                        },
-                        new
-                        {
-                            MenuItemId = 52,
-                            Description = "Torskrygg serverad med brynt smör och pepparrot",
-                            IsAvailable = true,
-                            MenuType = 3,
-                            Name = "Torskrygg med brynt smör",
-                            Price = 259f
-                        },
-                        new
-                        {
-                            MenuItemId = 53,
                             Description = "Traditionellt Julbord i riktig SQLicious anda!",
                             IsAvailable = true,
                             MenuType = 4,
@@ -4549,7 +4372,7 @@ namespace SQLicious.Server.Migrations
                         },
                         new
                         {
-                            MenuItemId = 54,
+                            MenuItemId = 34,
                             Description = "OBS: Gäller ej barn under 6 år.",
                             IsAvailable = true,
                             MenuType = 4,
@@ -4558,7 +4381,7 @@ namespace SQLicious.Server.Migrations
                         },
                         new
                         {
-                            MenuItemId = 55,
+                            MenuItemId = 35,
                             Description = "Ingen vet hur man uttalar detta.",
                             IsAvailable = true,
                             MenuType = 4,
