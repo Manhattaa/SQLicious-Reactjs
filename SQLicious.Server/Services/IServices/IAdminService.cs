@@ -8,7 +8,7 @@ namespace SQLicious.Server.Services.IServices
 {
     public interface IAdminService
     {
-        Task<IEnumerable<Admin>> GetAllAdmins();
+        Task<IEnumerable<Admin>> GetAllAdminsAsync();
         Task<Admin> GetAdminById(int id);
         Task<AccountCreationResult> CreateAdminAsync(CreateAccountRequestDTO request);
         Task<IdentityResult> UpdateAdminAsync(Admin admin);

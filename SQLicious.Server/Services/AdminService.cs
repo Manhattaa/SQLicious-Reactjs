@@ -7,6 +7,8 @@ using SQLicious.Server.Options;
 using SQLicious.Server.Services.IServices;
 using System.Security.Claims;
 using SQLicious.Server.Options.Email.IEmail;
+using SQLicious.Server.Data.Repository;
+using SQLicious.Server.Model.DTOs.Booking;
 
 namespace SQLicious.Server.Services
 {
@@ -23,9 +25,24 @@ namespace SQLicious.Server.Services
             _authService = authService;
         }
 
-        public async Task<IEnumerable<Admin>> GetAllAdmins()
+        public async Task<IEnumerable<Admin>> GetAllAdminsAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var listOfAdmins = await _adminRepository.GetAllAdminsAsync();
+
+                return listOfAdmins.Select(a => new Admin
+                {
+                    Id = a.Id,
+                    Email = a.Email,
+                    FirstName = a.FirstName,
+                    LastName = a.LastName,
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}");
+            }
         }
 
         public async Task<Admin> GetAdminById(int id)
