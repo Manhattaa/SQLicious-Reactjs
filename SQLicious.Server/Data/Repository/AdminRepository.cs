@@ -73,7 +73,7 @@ namespace SQLicious.Server.Data.Repository
         }
 
         // Return all Admins
-        public async Task<IEnumerable<Admin>> GetAllAdmins()
+        public async Task<IEnumerable<Admin>> GetAllAdminsAsync()
         {
             return await _restaurantContext.Admins.ToListAsync();
         }

@@ -26,7 +26,7 @@ namespace SQLicious.Server.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAllAdmins()
         {
-            var admins = await _adminService.GetAllAdmins();
+            var admins = await _adminService.GetAllAdminsAsync();
             return Ok(admins.Select(a => new { a.Id, a.Email }));
         }
 
@@ -123,7 +123,7 @@ namespace SQLicious.Server.Controllers
         [HttpPost("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequestDTO model)
         {
-            var result = await _adminService.SendEmailVerificationAsync(model.UserId, model.Code);
+            var result = await _adminService.SendEmailVerificationAsync(model.Id, model.Code);
             if (result.Succeeded)
             {
                 return Ok(new { Message = "Email confirmed successfully" });

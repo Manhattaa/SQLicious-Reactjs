@@ -7,7 +7,7 @@ namespace SQLicious.Server.Data.Repository.IRepositories
 {
     public interface IAdminRepository
     {
-        Task<IEnumerable<Admin>> GetAllAdmins();
+        Task<IEnumerable<Admin>> GetAllAdminsAsync();
         Task<Admin> GetAdminById(int id);
         Task<IdentityResult> CreateAdminAsync(Admin admin, string password);
         Task<IdentityResult> UpdateAdminAsync(Admin admin);
