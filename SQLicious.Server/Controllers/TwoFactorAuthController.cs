@@ -24,8 +24,8 @@ namespace SQLicious.Server.Controllers
         }
 
         // Enable 2FA for the current admin
-        [HttpPost]
-        public async Task<IActionResult> EnableTwoFactorAuthentication()
+        [HttpPost("enable-2fa")]
+        public async Task<IActionResult> EnableTwoFactorAuthentication([FromBody] string code)
         {
             var admin = await _userManager.GetUserAsync(User);
             if (admin == null)
@@ -56,11 +56,22 @@ namespace SQLicious.Server.Controllers
                 }
             }
 
+            // Verify the 6-digit code entered by the admin
+            var isValidCode = await _userManager.VerifyTwoFactorTokenAsync(admin, TokenOptions.DefaultAuthenticatorProvider, code);
+
+            if (!isValidCode)
+            {
+                return BadRequest("Invalid 2FA code.");
+            }
+
+            // Enable 2FA for this admin
+            await _userManager.SetTwoFactorEnabledAsync(admin, true);
+
             return Ok(new { Message = "Two-factor authentication enabled successfully." });
         }
 
-            // Generate QR code for 2FA setup
-            [HttpGet("generate-qr-code")]
+        // Generate QR code for 2FA setup
+        [HttpGet("generate-qr-code")]
         public async Task<IActionResult> GenerateQrCode()
         {
             var admin = await _userManager.GetUserAsync(User);
