@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using QRCoder;
 using SQLicious.Server.Helpers;
 using SQLicious.Server.Model;
+using SQLicious.Server.Model.DTOs;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace SQLicious.Server.Controllers
 
         // Enable 2FA for the current admin
         [HttpPost("enable-2fa")]
-        public async Task<IActionResult> EnableTwoFactorAuthentication([FromBody] string code)
+        public async Task<IActionResult> EnableTwoFactorAuthentication([FromBody] TwoFactorAuthDTO code)
         {
             var admin = await _userManager.GetUserAsync(User);
             if (admin == null)
@@ -57,7 +58,7 @@ namespace SQLicious.Server.Controllers
             }
 
             // Verify the 6-digit code entered by the admin
-            var isValidCode = await _userManager.VerifyTwoFactorTokenAsync(admin, TokenOptions.DefaultAuthenticatorProvider, code);
+            var isValidCode = await _userManager.VerifyTwoFactorTokenAsync(admin, TokenOptions.DefaultAuthenticatorProvider, code.Code);
 
             if (!isValidCode)
             {
