@@ -135,6 +135,11 @@ namespace SQLicious.Server.Data.Repository
                 string token = _authService.GenerateToken(admin);
                 return LoginResult.Successful(token);
             }
+            else if (loginResult.RequiresTwoFactor)
+            {
+                string token = _authService.GenerateToken(admin);
+                return LoginResult.Requires2FA(token);
+            }
             if (loginResult.IsNotAllowed)
                 return LoginResult.Failed("You must confirm your account to log in. Please check your email for a verification link.");
             if (loginResult.IsLockedOut)

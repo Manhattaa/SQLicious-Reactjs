@@ -103,7 +103,7 @@ namespace SQLicious.Server.Controllers
 
         // Verify 2FA token
         [HttpPost("verify-2fa")]
-        public async Task<IActionResult> VerifyTwoFactorCode([FromForm] string code)
+        public async Task<IActionResult> VerifyTwoFactorCode([FromBody] TwoFactorAuthDTO code)
         {
             var admin = await _userManager.GetUserAsync(User);
             if (admin == null)
@@ -115,7 +115,7 @@ namespace SQLicious.Server.Controllers
             var hashedKey = admin.AuthenticatorKey;
 
             // Check the code using the hashed key
-            var isValidCode = await _userManager.VerifyTwoFactorTokenAsync(admin, TokenOptions.DefaultAuthenticatorProvider, code);
+            var isValidCode = await _userManager.VerifyTwoFactorTokenAsync(admin, TokenOptions.DefaultAuthenticatorProvider, code.Code);
 
             if (!isValidCode)
             {

@@ -114,6 +114,19 @@ namespace SQLicious.Server.Controllers
 
                 return Ok(new { Message = "Login successful", token = result.Token });
             }
+            else if (result.Require2FA)
+            {
+                // Create a cookie for the JWT token
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddHours(1)
+                };
+                Response.Cookies.Append("JWTToken", result.Token, cookieOptions);
+                return Unauthorized(new { Message = "Requires Two Factor Authentication", token = result.Token });
+            }
             else
             {
                 return Unauthorized(new { message = result.ErrorMessage } );

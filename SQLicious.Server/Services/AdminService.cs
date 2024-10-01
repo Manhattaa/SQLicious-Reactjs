@@ -67,11 +67,14 @@ namespace SQLicious.Server.Services
             
             var result = await _adminRepository.LoginAsync(email, password);
 
-            if (!result.Success)
+            if (!result.Success && !result.Require2FA)
             {
                 return new LoginResult { Success = false, ErrorMessage = "Invalid email or password." };
             }
-
+            else if (result.Require2FA)
+            {
+                return new LoginResult { Require2FA = true, Token = _authService.GenerateToken(admin) };
+            }
             // Generate JWT token
             var token = _authService.GenerateToken(admin);
 
